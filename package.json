@@ -21,9 +21,16 @@
     "@angular/platform-browser": "^5.2.0",
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/router": "^5.2.0",
+    "body-parser": "^1.18.2",
+    "bootstrap": "^4.0.0",
     "core-js": "^2.4.1",
+    "express": "^4.16.2",
+    "mysql": "^2.15.0",
+    "ngx-dropdown": "0.0.22",
     "rxjs": "^5.5.6",
-    "zone.js": "^0.8.19"
+    "zone.js": "^0.8.19",
+    "ng-http-loader": "latest",
+    "ng2-charts": "latest"
   },
   "devDependencies": {
     "@angular/cli": "~1.7.1",

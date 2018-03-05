@@ -1,0 +1,16 @@
+function Scrawler(id, location, missing_papers, operation,
+                  effectiveness_rate, download_rate,
+                  last_updated, started) {
+  this.id =  id;
+  this.location = location;
+  this.missing_papers = missing_papers;
+  this.operation = operation;
+  this.effectiveness_rate = effectiveness_rate;
+  this.download_rate = download_rate;
+  this.last_updated = last_updated;
+  this.started = started;
+}
+
+// export the class
+module.exports = Scrawler;
+
