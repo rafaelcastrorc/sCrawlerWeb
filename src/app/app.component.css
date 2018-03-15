@@ -1,0 +1,7 @@
+html, body {
+  background-color: #222629;
+  min-height: 100vh;
+  height: 100vh !important;
+  width: 100%;
+  min-width: 100%;
+}

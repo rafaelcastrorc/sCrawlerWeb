@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">sCrawler Management System</a>
+  <a class="navbar-brand" routerLink="/home">sCrawler Management System</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler"
           aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -24,24 +24,28 @@
   </div>
 </nav>
 
+
+<body >
+
+  <router-outlet></router-outlet>
+</body>
+
+<!--Background-->
+
+<!--&lt;!&ndash;Controls the spinner&ndash;&gt;-->
+<!--<spinner-->
+  <!--[spinner]="spinkit.skChasingDots"-->
+  <!--[debounceDelay]="150"-->
+<!--&gt;</spinner>-->
+
 <script>
-  $(".nav li").on("click", function() {
+  $(".nav li").on("click", function () {
     $(".nav li").removeClass("active");
     $(this).addClass("active");
   });
 </script>
-<div class="container">
-  <router-outlet></router-outlet>
-</div>
-
-
-<!--Controls the spinner-->
-<spinner
-  [spinner]="spinkit.skChasingDots"
-  [debounceDelay]="150"
-></spinner>
 
 <!--For Displaying the charts-->
-<script src="node_modules/chart.js/src/chart.js"></script>
+<script src="../../node_modules/chart.js/src/chart.js"></script>
 
 

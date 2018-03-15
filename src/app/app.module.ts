@@ -9,7 +9,7 @@ import { DropdownModule } from 'ngx-dropdown';
 import { HttpClientModule } from '@angular/common/http';
 import { NgHttpLoaderModule } from "ng-http-loader/ng-http-loader.module";
 import { ChartsModule } from 'ng2-charts';
-import { ScrawlerListComponent } from './scrawlers/scrawler-list/scrawler-list.component';
+import { VisualizerComponent } from './scrawlers/visualizer/visualizer.component';
 
 
 
@@ -18,7 +18,7 @@ import { ScrawlerListComponent } from './scrawlers/scrawler-list/scrawler-list.c
     AppComponent,
     HomeComponent,
     ScrawlersComponent,
-    ScrawlerListComponent
+    VisualizerComponent
   ],
   imports: [
     BrowserModule,
