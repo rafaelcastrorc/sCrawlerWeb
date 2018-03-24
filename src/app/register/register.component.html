@@ -1,0 +1,33 @@
+
+<body class="text-center">
+<form class="form-signin" (submit)="loginUser($event)">
+  <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+  <h1 class="h3 mb-3 font-weight-normal">Please register</h1>
+  <label for="inputFirstName" class="sr-only">Email address</label>
+  <input [(ngModel)] = "firstname" name = "none" type="email" id="inputFirstname" class="form-control"
+         placeholder="First Name"
+         required
+         autofocus>
+
+  <label for="inputLastName" class="sr-only">Email address</label>
+  <input [(ngModel)] = "lastname" name = "none" type="email" id="inputLastName" class="form-control"
+         placeholder="Last Name"
+         required
+         autofocus>
+
+
+  <label for="inputEmail" class="sr-only">Email address</label>
+  <input [(ngModel)] = "email" name = "none" type="email" id="inputEmail" class="form-control"
+         placeholder="Email address"
+         required
+         autofocus>
+
+  <label for="inputPassword" class="sr-only">Password</label>
+  <input [(ngModel)] = "password" name = "none" type="password" id="inputPassword" class="form-control"
+         placeholder="Password"
+         required>
+
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+  <p class="mt-5 mb-3 text-muted">&copy; 2018</p>
+</form>
+</body>
