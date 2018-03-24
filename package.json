@@ -32,7 +32,6 @@
     "express": "^4.16.2",
     "express-validator": "^5.0.3",
     "mysql": "^2.15.0",
-    "ng-http-loader": "latest",
     "ng2-charts": "latest",
     "ngx-dropdown": "0.0.22",
     "passport": "^0.4.0",
