@@ -6,10 +6,14 @@ import {AppRoutingModule} from "./app-routing.module";
 import { ScrawlersComponent } from './scrawlers/scrawlers.component';
 import {FormsModule} from "@angular/forms";
 import { DropdownModule } from 'ngx-dropdown';
-import { HttpClientModule } from '@angular/common/http';
-import { NgHttpLoaderModule } from "ng-http-loader/ng-http-loader.module";
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ChartsModule } from 'ng2-charts';
 import { VisualizerComponent } from './scrawlers/visualizer/visualizer.component';
+import { LoginComponent } from './login/login.component';
+import { AdminComponent } from './admin/admin.component';
+import { RegisterComponent } from './register/register.component';
+import {AuthService} from "./auth.service";
+
 
 
 
@@ -18,7 +22,10 @@ import { VisualizerComponent } from './scrawlers/visualizer/visualizer.component
     AppComponent,
     HomeComponent,
     ScrawlersComponent,
-    VisualizerComponent
+    VisualizerComponent,
+    LoginComponent,
+    AdminComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -26,10 +33,10 @@ import { VisualizerComponent } from './scrawlers/visualizer/visualizer.component
     FormsModule,
     DropdownModule,
     HttpClientModule,
-    NgHttpLoaderModule,
-    ChartsModule
+    ChartsModule,
+
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,7 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const api = require('./server/routes/api_scrawlers');
+const apiScrawlers = require('./server/routes/api_scrawlers');
+const apiUsers = require('./server/routes/api_users');
+
+
 const port = 3000;
 const app = express();
 
@@ -10,8 +13,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/api', api);
-
+app.use('/api_scrawlers', apiScrawlers);
+app.use('/api_users', apiUsers);
 
 //Default page is index
 app.get('*', function(req, res) {
