@@ -13,8 +13,7 @@ import { LoginComponent } from './login/login.component';
 import { AdminComponent } from './admin/admin.component';
 import { RegisterComponent } from './register/register.component';
 import {AuthService} from "./auth.service";
-
-
+import {SkCubeGridComponent} from 'ng-http-loader/components/sk-cube-grid/sk-cube-grid.component';
 
 
 @NgModule({
@@ -34,6 +33,7 @@ import {AuthService} from "./auth.service";
     DropdownModule,
     HttpClientModule,
     ChartsModule,
+    SkCubeGridComponent
 
   ],
   providers: [AuthService],
