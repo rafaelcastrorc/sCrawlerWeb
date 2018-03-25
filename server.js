@@ -5,7 +5,8 @@ const apiScrawlers = require('./server/routes/api_scrawlers');
 const apiUsers = require('./server/routes/api_users');
 
 
-const port = 3000;
+var port = process.env.PORT || 3000;
+
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'dist')));
