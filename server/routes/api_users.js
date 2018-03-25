@@ -1,14 +1,25 @@
 /**
  * Developed by Rafael Castro
- * Handles the user database
+ * Handles everything related to user management
  */
 const express = require('express');
 const router = express.Router();
+
+//For hashing the password
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 var expressValidator= require('express-validator');
 router.use(expressValidator());
+
+//To handle user sessions once they are logged in
+var session = require('express-session');
+router.use(session({
+  secret: 'JlNyXZDRfW8bKhZT9oR5',
+  resave: false,
+  saveUninitialized : false,
+  cookie: {secure: true}
+}));
 
 var mysql = require('mysql');
 // Todo: This should change to be depending on the user settings
@@ -55,8 +66,9 @@ router.post('/register', function (req, res) {
 
   const errors = req.validationErrors();
   if (errors) {
-    console.log(errors);
-    res.send(errors)
+    console.log('One or more fields are not correct');
+    res.status(400);
+    res.send('One or more fields are not correct');
   }
   else {
     var firstname = req.body.firstname;
@@ -69,7 +81,11 @@ router.post('/register', function (req, res) {
       [firstname, lastname, email, password], function (error, results, fields) {
         if (error) {
           console.log(error.message);
+          //Specifies that there is an error
+          res.status(400);
+          //Send the error message
           res.send(error.message);
+
         }
         else {
           console.log('Registration successful!');

@@ -25,10 +25,7 @@ export class AuthService {
       lastname,
       email,
       password
-    }).subscribe(data => {
-      console.log(data, 'data returned from server');
     })
-
   }
 
 }

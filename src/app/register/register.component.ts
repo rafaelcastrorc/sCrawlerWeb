@@ -12,6 +12,7 @@ export class RegisterComponent implements OnInit {
   protected lastname: string;
   protected email: string;
   protected password: string;
+  private error: string;
 
   constructor(private Auth: AuthService) {
   }
@@ -21,7 +22,16 @@ export class RegisterComponent implements OnInit {
 
   loginUser(event) {
     event.preventDefault();
-    this.Auth.registerUser(this.firstname, this.lastname, this.email, this.password);
+    this.Auth.registerUser(this.firstname, this.lastname, this.email, this.password)
+      .subscribe(
+        data => {
+          //Redirect person to scrawler page
+        },
+        error => {
+          this.error = error.error;
+          window.alert(this.error);
+        }
+      );
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {Spinkit} from 'ng-http-loader/spinkits';
+// import {Spinkit} from 'ng-http-loader/spinkits';
 
 
 @Component({
@@ -9,6 +9,6 @@ import {Spinkit} from 'ng-http-loader/spinkits';
 })
 export class AppComponent {
   title = 'sCrawler';
-  public spinkit = Spinkit;
+  // public spinkit = Spinkit;
 
 }
