@@ -8,8 +8,8 @@ import {AuthService} from "../auth.service";
 })
 export class LoginComponent implements OnInit {
 
-  protected email : string;
-  protected password: string;
+  email : string;
+  password: string;
 
   constructor(private Auth: AuthService) { }
 

@@ -8,11 +8,11 @@ import {AuthService} from "../auth.service";
 })
 export class RegisterComponent implements OnInit {
 
-  protected firstname: string;
-  protected lastname: string;
-  protected email: string;
-  protected password: string;
-  private error: string;
+   firstname: string;
+   lastname: string;
+   email: string;
+   password: string;
+   error: string;
 
   constructor(private Auth: AuthService) {
   }
