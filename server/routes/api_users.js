@@ -1,35 +1,46 @@
 /**
  * Developed by Rafael Castro
- * Handles everything related to user management
+ * Handles everything related to user registration and logging in/out
  */
 const express = require('express');
 const router = express.Router();
-
-//For hashing the password
-var bcrypt = require('bcrypt');
-const saltRounds = 10;
-
-var expressValidator= require('express-validator');
-router.use(expressValidator());
-
-//To handle user sessions once they are logged in
-var session = require('express-session');
-router.use(session({
-  secret: 'JlNyXZDRfW8bKhZT9oR5',
-  resave: false,
-  saveUninitialized : false,
-  cookie: {secure: true}
-}));
-
 var mysql = require('mysql');
-// Todo: This should change to be depending on the user settings
-var connection = mysql.createConnection({
+var bcrypt = require('bcrypt');
+//For hashing the password
+const saltRounds = 10;
+//For validating user input
+var expressValidator = require('express-validator');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+//To handle user sessions once they are logged in
+// var expressSession = require('express-session');
+// var MySQLStore = require('express-mysql-session')(expressSession);
+var options = {
   host: 'sql9.freemysqlhosting.net',
   port: '3306',
   user: 'sql9214195',
   password: '2ddXZXDT3m',
   database: 'sql9214195'
-});
+};
+var connection = mysql.createConnection(options);
+// var sessionStore = new MySQLStore({}, connection);
+var passport = require('passport');
+
+router.use(expressValidator());
+router.use(cookieParser('JlNyXZDRfW8bKhZT9oR5XYZ'));
+router.use(bodyParser());
+// router.use(expressSession({
+//   secret: 'JlNyXZDRfW8bKhZT9oR5XYZ',
+//   resave: false,
+//   saveUninitialized: false,
+//   store: sessionStore,
+//   //Todo: change this
+//   cookie: {secure: false}
+// }));
+// router.use(passport.initialize());
+// router.use(passport.session());
+
+
 
 router.get('/', function (req, res) {
   res.send('User API  works!');
@@ -45,16 +56,7 @@ connection.connect(function (error) {
   }
 });
 
-
-// router.post('login', function (req, res) {
-//   var email = 'req.body.email';
-//   var password = 'req.body.password';
-//   connection.query(query, function (err, rows, fields) {
-//   }
-// }
-
-
-//To get all active crawlers
+//To register
 router.post('/register', function (req, res) {
   console.log('Registering user');
   //Validate
@@ -66,7 +68,6 @@ router.post('/register', function (req, res) {
 
   const errors = req.validationErrors();
   if (errors) {
-    console.log('One or more fields are not correct');
     res.status(400);
     res.send('One or more fields are not correct');
   }
@@ -78,7 +79,7 @@ router.post('/register', function (req, res) {
     var password = bcrypt.hashSync(myPlaintextPassword, saltRounds);
     // Store hash in your password DB.
     connection.query('INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)',
-      [firstname, lastname, email, password], function (error, results, fields) {
+      [firstname, lastname, email, password], function (error) {
         if (error) {
           console.log(error.message);
           //Specifies that there is an error
@@ -88,9 +89,52 @@ router.post('/register', function (req, res) {
 
         }
         else {
-          console.log('Registration successful!');
+          //To tell front-end that it worked
+          connection.query('SELECT LAST_INSERT_ID() AS user_id', function (error, results, fields) {
+            if (error) {
+              console.log(error);
+              res.status(400);
+              res.send(error.message);
+            }
+            else {
+              //If everything works logging in, get the user_id
+              const user_id = results[0].user_id;
+              //This goes to serializedUser (part of passport)
+              req.login(user_id, function (err) {
+                if (err) throw err;
+                res.status(200);
+                console.log('User successfully logged in from register: ' + req.user);
+                res.end();
+              });
+            }
+          });
         }
       })
+  }
+});
+
+
+passport.serializeUser(function (user_id, done) {
+  done(null, user_id);
+});
+
+passport.deserializeUser(function (user_id, done) {
+  done(null, user_id);
+});
+
+/**
+ * Verify if user is logged in
+ */
+router.get('/getauth', function (req, res, next) {
+  console.log('User Trying to authenticate: '+  req.user);
+  console.log('Is Authenticated '+  req.isAuthenticated());
+  if (req.isAuthenticated()) {
+    console.log('valid user');
+    res.send(JSON.stringify({ status: true }));
+  } else {
+    console.log('Invalid user');
+    res.send(JSON.stringify({ status: false }));
+
   }
 });
 

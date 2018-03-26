@@ -1,13 +1,22 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from "rxjs/Observable";
+
+interface isLoggedIn {
+  status: boolean
+}
 
 @Injectable()
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+
+  private loggedInStatus = false;
+
+  constructor(private http: HttpClient) {
+  }
 
   //Logs in the user
-  getUserDetails(email: string, password: string) {
+  loginUser(email: string, password: string) {
     return this.http.post('/api_users/login', {
       email,
       password
@@ -19,7 +28,7 @@ export class AuthService {
 
 
   //Logs in the user
-  registerUser(firstname:string, lastname:string, email: string, password: string) {
+  registerUser(firstname: string, lastname: string, email: string, password: string) {
     return this.http.post('/api_users/register', {
       firstname,
       lastname,
@@ -27,5 +36,21 @@ export class AuthService {
       password
     })
   }
+
+  setLoggedIn(value: boolean) {
+    this.loggedInStatus = value;
+  }
+
+  get isLoggedIn(): boolean {
+    return this.loggedInStatus;
+  }
+
+  /**
+   * Access server to check if user is actually logged in
+   */
+  verifyLoggingStatus(): Observable<isLoggedIn> {
+    return this.http.get<isLoggedIn>('/api_users/getauth');
+  }
+
 
 }

@@ -20,6 +20,6 @@ export class LoginComponent implements OnInit {
   loginUser(event) {
     event.preventDefault();
     console.log(this.email + ' ' + this.password);
-    this.Auth.getUserDetails(this.email, this.password);
+    this.Auth.loginUser(this.email, this.password);
   }
 }
