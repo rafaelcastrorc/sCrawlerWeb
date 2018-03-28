@@ -1,49 +1,55 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" routerLink="/home">sCrawler Management System</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler"
-          aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark" style= "background-color: #222629; z-index: 9999">
+  <a class="navbar-brand" routerLink="/home">
+    <img src="../assets/img/smalliconlogo.png" width="50" height="50" alt="">
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse"
+          data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+          aria-expanded="false" aria-label="Toggle navigation"
+          (click)="toggleCollapsed()">
     <span class="navbar-toggler-icon"></span>
   </button>
-
-  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+  <div id="navbarSupportedContent" [ngClass]="{'collapse': collapsed, 'navbar-collapse': true}">
+    <!--To center these navbar buttons-->
+    <ul class="navbar-nav ml-auto mr-auto">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/home" routerLinkActive="active">Home</a>
+        <a class="nav-link" routerLink="/home" routerLinkActive="active" style="font-size: 1.3em">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/scrawlers" routerLinkActive="active">Active sCrawlers</a>
+        <a class="nav-link" routerLink="/scrawlers" routerLinkActive="active" style="font-size: 1.3em">Active sCrawlers</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
+        <a class="nav-link disabled" href="#" style="font-size: 1.3em">Download sCrawler</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" style="font-size: 1.3em">System Status</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" style="font-size: 1.3em">About</a>
       </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
   </div>
 </nav>
 
-
-<body >
-
-  <router-outlet></router-outlet>
+<router-outlet></router-outlet>
 </body>
 
 <!--Background-->
 
 <!--&lt;!&ndash;Controls the spinner&ndash;&gt;-->
 <!--<spinner-->
-  <!--[spinner]="spinkit.skChasingDots"-->
-  <!--[debounceDelay]="150"-->
+<!--[spinner]="spinkit.skChasingDots"-->
+<!--[debounceDelay]="150"-->
 <!--&gt;</spinner>-->
 
+<!--Changes color of active tab-->
 <script>
   $(".nav li").on("click", function () {
     $(".nav li").removeClass("active");
     $(this).addClass("active");
   });
 </script>
+
 
 <!--For Displaying the charts-->
 <script src="../../node_modules/chart.js/src/chart.js"></script>

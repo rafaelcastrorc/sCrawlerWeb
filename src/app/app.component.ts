@@ -10,5 +10,13 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'sCrawler';
   // public spinkit = Spinkit;
+  collapsed = true;
+
+  /**
+   * Collapses nav bar
+   */
+  toggleCollapsed(): void {
+    this.collapsed = !this.collapsed;
+  }
 
 }

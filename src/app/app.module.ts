@@ -14,7 +14,7 @@ import { AdminComponent } from './admin/admin.component';
 import { RegisterComponent } from './register/register.component';
 import {AuthService} from "./auth.service";
 import {AuthGuard} from "./auth.guard";
-import {UserService} from "./user.service";
+import {ParticlesModule} from "angular-particle";
 
 
 @NgModule({
@@ -33,9 +33,10 @@ import {UserService} from "./user.service";
     FormsModule,
     DropdownModule,
     HttpClientModule,
-    ChartsModule
+    ChartsModule,
+    ParticlesModule
   ],
-  providers: [AuthService, AuthGuard, UserService],
+  providers: [AuthService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

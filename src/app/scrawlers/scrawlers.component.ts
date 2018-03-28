@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {Scrawler} from "../scrawler";
-import {UserService} from "../user.service";
 import {AuthService} from "../auth.service";
 
 @Component({

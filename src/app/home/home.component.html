@@ -1,28 +1,38 @@
 <body class="text-center">
-
-<!--Home Page-->
-<div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
-
-  <main role="main" class="inner cover">
-    <h1 class="cover-heading">sCrawler Management System</h1>
-    <p class="lead">Manage multiple sCrawlers at the same time. </p>
-    <p class="lead">Check for proxies available, current system status, and send notifications to other sCrawlers</p>
+<div class="h-100 row align-items-center mx-auto">
+  <div class="col" style="background:rgba(35, 38, 41, 0.6); max-width: 100%; height: auto; z-index: 999">
+    <img class="mb-2" src="../../assets/img/mainlogo.png" width="850" height="150" style="max-width: 100%; height:
+    auto;">
+    <p class="lead mb-4">Manage multiple sCrawlers at the same time. </p>
+    <p class="lead mb-4">Check for proxies available, current system status, and send notifications to other
+      sCrawlers</p>
     <p class="lead">
       <a routerLink="/login" class="btn btn-lg btn-secondary">Log In</a>
     </p>
-    <p class="lead">
+    <p class="lead mb-5">
       <a routerLink="/register" class="btn btn-lg btn-secondary">Register</a>
     </p>
-  </main>
+  </div>
 
-
-  <footer class="mastfoot mt-auto">
-    <div class="inner">
-      <p>Developed by Rafael Castro - <a href="https://github.com/rafaelcastrorc">GitHub</a>.</p>
-    </div>
-  </footer>
 </div>
+<!--Particles-->
+<div>
+  <particles [params]="myParams" [style]="myStyle" [width]="width" [height]="height"></particles>
+</div>
+
 </body>
+
+
+
+<!--<footer class="mastfoot mt-auto">-->
+<!--<div class="inner">-->
+<!--<p>Developed by Rafael Castro - <a href="https://github.com/rafaelcastrorc">GitHub</a>.</p>-->
+<!--</div>-->
+<!--</footer>-->
+
+
+
+
 
 
 
