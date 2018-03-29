@@ -1,19 +1,22 @@
 <body class="text-center">
 <div class="h-100 row align-items-center mx-auto">
   <div class="col" style="background:rgba(35, 38, 41, 0.6); max-width: 100%; height: auto; z-index: 999">
-    <img class="mb-2" src="../../assets/img/mainlogo.png" width="850" height="150" style="max-width: 100%; height:
-    auto;">
-    <p class="lead mb-4">Manage multiple sCrawlers at the same time. </p>
-    <p class="lead mb-4">Check for proxies available, current system status, and send notifications to other
-      sCrawlers</p>
-    <p class="lead">
-      <a routerLink="/login" class="btn btn-lg btn-secondary">Log In</a>
-    </p>
-    <p class="lead mb-5">
-      <a routerLink="/register" class="btn btn-lg btn-secondary">Register</a>
-    </p>
+    <img class="mb-4 mt-4" src="../../assets/img/mainlogo.png" width="850" height="150" style="max-width: 100%; height:
+    auto; min-height: 50%">
+    <p class="lead mb-4">Manage multiple sCrawlers at the same time </p>
+    <a class="btn btn-link mb-4" style="text-decoration: none !important; font-size: 1.25rem !important;"
+       (click)="learnMoreText()">Click here
+      to learn more
+    </a>
+    <div class="col-sm-12 text-center">
+      <button id="btnLogin" class="btn btn-lg btn-secondary center-block mr-4  mb-4" Style="width: 150px;"
+              routerLink="/login">Log in
+      </button>
+      <button id="btnRegister" class="btn btn-lg btn-secondary center-block  mb-4" Style="width: 150px;"
+              routerLink="/register">Register
+      </button>
+    </div>
   </div>
-
 </div>
 <!--Particles-->
 <div>
@@ -22,13 +25,10 @@
 
 </body>
 
+<div class="footer">
+  <p>Developed & Designed by Rafael Castro - <a href="https://github.com/rafaelcastrorc">GitHub</a>.</p>
+</div>
 
-
-<!--<footer class="mastfoot mt-auto">-->
-<!--<div class="inner">-->
-<!--<p>Developed by Rafael Castro - <a href="https://github.com/rafaelcastrorc">GitHub</a>.</p>-->
-<!--</div>-->
-<!--</footer>-->
 
 
 

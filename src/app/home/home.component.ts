@@ -1,4 +1,5 @@
 import {Component, OnInit, style} from '@angular/core';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,7 @@ export class HomeComponent implements OnInit {
   width: number = 100;
   height: number = 100;
 
-  constructor() {
+  constructor(private router: Router) {
   }
 
   ngOnInit() {
@@ -66,5 +67,10 @@ export class HomeComponent implements OnInit {
 
   }
 
-
+  /**
+   * Opens the About tab when user clicks 'Click here to learn more'
+   */
+  learnMoreText() {
+    this.router.navigate(['about']);
+  }
 }

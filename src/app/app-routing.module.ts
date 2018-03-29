@@ -6,6 +6,7 @@ import {LoginComponent} from "./login/login.component";
 import {Register} from "ts-node";
 import {RegisterComponent} from "./register/register.component";
 import {AuthGuard} from "./auth.guard";
+import {AboutComponent} from "./about/about.component";
 
 const routes: Routes = [
   // You can access the routes directly from the adress bar
@@ -14,6 +15,8 @@ const routes: Routes = [
   {path: 'scrawlers', component: ScrawlersComponent, canActivate: [AuthGuard]},
   {path: 'login', component:  LoginComponent},
   {path: 'register', component:  RegisterComponent},
+  {path: 'about', component:  AboutComponent},
+
 
 
 

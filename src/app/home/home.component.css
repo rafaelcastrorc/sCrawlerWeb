@@ -18,6 +18,17 @@ body, html {
   font-weight: 700;
 }
 
+/*On click*/
+.btn-secondary:active {
+  background-color: #61892F !important;
+}
+
+#btnLogin,
+#btnRegister{
+  display: inline-block;
+  vertical-align: top;
+}
+
 /*
  * Base structure
  */
@@ -42,17 +53,17 @@ body {
   min-width: 100%;
   color: #fff;
   text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
-
 }
-
-
-
 
 /*
  * Footer
  */
-.mastfoot {
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
   color: rgba(255, 255, 255, .5);
-
+  text-align: center;
+  z-index: 999
 }
-

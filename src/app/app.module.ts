@@ -15,6 +15,7 @@ import { RegisterComponent } from './register/register.component';
 import {AuthService} from "./auth.service";
 import {AuthGuard} from "./auth.guard";
 import {ParticlesModule} from "angular-particle";
+import { AboutComponent } from './about/about.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import {ParticlesModule} from "angular-particle";
     LoginComponent,
     AdminComponent,
     RegisterComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,
