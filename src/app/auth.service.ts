@@ -6,6 +6,9 @@ interface isLoggedIn {
   status: boolean
 }
 
+interface IncomingMessage {
+  message: string
+}
 @Injectable()
 export class AuthService {
 
@@ -29,7 +32,7 @@ export class AuthService {
 
   //Logs in the user
   registerUser(firstname: string, lastname: string, email: string, password: string) {
-    return this.http.post('/api_users/register', {
+    return this.http.post<IncomingMessage>('/api_users/register', {
       firstname,
       lastname,
       email,

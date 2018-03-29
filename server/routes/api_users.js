@@ -64,12 +64,13 @@ router.post('/register', function (req, res) {
   req.checkBody('lastname').notEmpty();
   req.checkBody('email').notEmpty();
   req.checkBody('password').notEmpty();
+  req.checkBody('password').isLength({min: 6});
   req.checkBody('email').isEmail();
 
   const errors = req.validationErrors();
   if (errors) {
-    res.status(400);
-    res.send('One or more fields are not correct');
+    console.log(errors[0].param);
+    res.send(JSON.stringify({ message: errors[0].param }));
   }
   else {
     var firstname = req.body.firstname;
@@ -82,10 +83,8 @@ router.post('/register', function (req, res) {
       [firstname, lastname, email, password], function (error) {
         if (error) {
           console.log(error.message);
-          //Specifies that there is an error
-          res.status(400);
           //Send the error message
-          res.send(error.message);
+          res.send(JSON.stringify({ message: error.message }));
 
         }
         else {
@@ -93,8 +92,7 @@ router.post('/register', function (req, res) {
           connection.query('SELECT LAST_INSERT_ID() AS user_id', function (error, results, fields) {
             if (error) {
               console.log(error);
-              res.status(400);
-              res.send(error.message);
+              res.send(JSON.stringify({ message: error.message }));
             }
             else {
               //If everything works logging in, get the user_id
@@ -104,8 +102,8 @@ router.post('/register', function (req, res) {
                 if (err) throw err;
                 res.status(200);
                 console.log('User successfully logged in from register: ' + req.user);
-                res.end();
-              });
+                res.send(JSON.stringify({ message: "success"}));
+                });
             }
           });
         }
