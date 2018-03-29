@@ -24,7 +24,7 @@ body, html {
 }
 
 #btnLogin,
-#btnRegister{
+#btnRegister {
   display: inline-block;
   vertical-align: top;
 }

@@ -28,19 +28,19 @@ export class HomeComponent implements OnInit {
       'right': 0,
       'bottom': 0,
       'background-position': '50% 50%',
-      'opacity':0.15
+      'opacity': 0.15
 
-  };
+    };
 
     this.myParams = {
-        particles: {
-          number: {
-            value: 150,
-          },
-          color: {
-            value: '#6B6E70'
-          },
+      particles: {
+        number: {
+          value: 150,
         },
+        color: {
+          value: '#6B6E70'
+        },
+      },
       interactivity: {
         detect_on: "canvas",
         events: {
@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit {
           }
         }
       },
-      };
+    };
 
   }
 
