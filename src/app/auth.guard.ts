@@ -18,6 +18,7 @@ export class AuthGuard implements CanActivate {
     }
     return this.auth.verifyLoggingStatus().pipe(map(res => {
       if (res.status) {
+        //Change login status if user is authenticated
         this.auth.setLoggedIn(true);
         return true;
       } else {

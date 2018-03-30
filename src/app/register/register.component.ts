@@ -44,6 +44,8 @@ export class RegisterComponent implements OnInit {
               this.error = 'The first name you submitted is invalid!'
             } else if (this.error=== 'lastname') {
               this.error = 'The last name you submitted is invalid!'
+            } else if (this.error === 'You have already registered. If you forgot your password, go to the login' +
+              ' page and click on the Forgot my password button.') {
             } else {
               //If it is not any of those errors, then show a pop up window
               window.alert(this.error);

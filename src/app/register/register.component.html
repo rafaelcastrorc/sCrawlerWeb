@@ -1,4 +1,4 @@
-<body class="text-center">
+<body class="text-center mt-autoh">
 <form class="form-signin" (submit)="registerUser($event)" #signinForm = "ngForm">
   <img class="mb-4" src="../../assets/img/smalliconlogobg.svg" alt="" width="72" height="72">
 
@@ -31,7 +31,6 @@
          class="form-control"
          placeholder="Last name"
          required
-         autofocus
          min="2"
          maxlength="30">
   <div *ngIf="inputLastName.errors && (inputLastName.dirty || inputLastName.touched)" class="alert alert-danger">
@@ -46,7 +45,6 @@
          class="form-control"
          placeholder="Email address"
          required
-         autofocus
          email>
   <div *ngIf="inputEmail.errors && (inputEmail.dirty || inputEmail.touched)" class="alert alert-danger">
     <div [hidden]="!inputEmail.errors.required">
@@ -64,13 +62,13 @@
          class="form-control"
          placeholder="Password"
          required
-         pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])\S{8,}">
+         pattern="^(?=.*[0-9])(?=.*[A-Za-z])\S{8,}">
   <div *ngIf="inputPassword.errors && (inputPassword.dirty || inputPassword.touched)" class="alert alert-danger">
     <div [hidden]="!inputPassword.errors.required">
       You need to write your password!
     </div>
     <div [hidden]="!inputPassword.errors.pattern">
-      Your password needs to haveM a minimum of eight characters, at least one letter and one number.
+      Your password needs to have a minimum of eight characters, at least one letter and one number.
 
 
     </div>

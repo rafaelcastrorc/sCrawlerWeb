@@ -1,13 +1,13 @@
-html, body {
-  background-color: #222629;
-  min-height: 100vh;
+
+html{
   height: 100vh;
+  min-height: 100vh;
+  margin:0;
   width: 100%;
   min-width: 100%;
   font-family: 'Montserrat', sans-serif;
-
+  background-color: #222629 !important;
 }
-
 
 img.navbar-brand {
   width: auto;
@@ -17,8 +17,14 @@ img.navbar-brand {
 }
 
 .navbar{
-  position: absolute;
   font-family: 'Montserrat', sans-serif;
   width: 100%;
+  height: 70px !important;
+  position: sticky;
 }
 
+
+body{
+  /*padding-top: 70px;*/
+  background-color: #222629 !important;
+}
