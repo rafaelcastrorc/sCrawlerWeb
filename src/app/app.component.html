@@ -35,7 +35,7 @@
       <div class="pull-right">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" [hidden]="!userLoggedIn" routerLink="/logout" routerLinkActive="active"
+            <a class="nav-link" [hidden]="!userLoggedIn" (click)="logout()" routerLink="/home"
                style="font-size: 1.3em;">Log out</a>
           </li>
         </ul>

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
@@ -11,25 +11,31 @@ interface isLoggedIn {
 interface IncomingMessage {
   message: string
 }
+
+interface LogoutStatus {
+  success: boolean
+}
 @Injectable()
 export class AuthService {
 
-
+  private _observableStatus = new EventEmitter;
   private loggedInStatus =  false;
 
 
   constructor(private http: HttpClient) {
   }
 
-  //Logs in the user
-  loginUser(email: string, password: string) {
-    return this.http.post('/api_users/login', {
-      email,
+  /**
+   * Logs the user in
+   * @param username
+   * @param {string} password
+   * @returns {Subscription}
+   */
+  loginUser(username: string, password: string) {
+    return this.http.post<IncomingMessage>('/api_users/login', {
+      username,
       password
-    }).subscribe(data => {
-      console.log(data, 'data returned from server');
     })
-
   }
 
 
@@ -55,12 +61,17 @@ export class AuthService {
    * @param {boolean} value
    */
   setLoggedIn(value: boolean) {
+    this._observableStatus.emit(value);
     this.loggedInStatus =value;
   }
 
 
   get isLoggedIn() {
     return this.loggedInStatus;
+  }
+
+  get observableStatus(): EventEmitter<any> {
+    return this._observableStatus;
   }
 
   /**
@@ -75,6 +86,14 @@ export class AuthService {
    */
   verifyLoggingStatus2() {
     return this.http.get<isLoggedIn>('/api_users/getauth');
+  }
+
+  /**
+   * Calls the server to log the user out
+   *
+   */
+  logout() {
+    return this.http.get<LogoutStatus>('/api_users/logout');
   }
 
 }

@@ -1,5 +1,6 @@
-import {Component, OnInit, style} from '@angular/core';
+import {Component, Input, OnInit, style} from '@angular/core';
 import {Router} from "@angular/router";
+import {AuthService} from "../auth.service";
 
 @Component({
   selector: 'app-home',
@@ -13,11 +14,15 @@ export class HomeComponent implements OnInit {
   myParams: object = {};
   width: number = 100;
   height: number = 100;
+  userLoggedIn: boolean;
 
-  constructor(private router: Router) {
+
+  constructor(private router: Router, private auth: AuthService) {
   }
 
   ngOnInit() {
+
+    //For the particles
     this.myStyle = {
       'position': 'fixed',
       'width': '100%',
@@ -64,7 +69,13 @@ export class HomeComponent implements OnInit {
         }
       },
     };
+    //First check if the user is already connected and its just coming back to the page
+    this.auth.verifyLoggingStatus2().subscribe(data => {
+      this.userLoggedIn = (data.status);
+    });
 
+    this.auth.observableStatus.subscribe(status =>
+      this.userLoggedIn = status);
   }
 
   /**

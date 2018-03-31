@@ -1,20 +1,19 @@
-
 <body>
 <div class="container-fluid">
   <div class="row">
-    <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+    <nav class="col-md-2 d-none d-md-block sidebar">
       <div class="sidebar-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
             <a class="nav-link active" href="#">
               <span data-feather="home"></span>
-              Dashboard {{message}} <span class="sr-only">(current)</span>
+              Dashboard <span class="sr-only">(current)</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" routerLink="#">
+            <a class="nav-link" href="#">
               <span data-feather="file"></span>
-              Orders
+              Control instances
             </a>
           </li>
           <li class="nav-item">
@@ -78,7 +77,6 @@
       </div>
     </nav>
 
-    <!--Dashboard starts here-->
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h2">Dashboard</h1>
@@ -93,6 +91,7 @@
           </button>
         </div>
       </div>
+
       <canvas class="my-4" id="myChart" width="900" height="380"></canvas>
 
       <h2>Section title</h2>
@@ -235,10 +234,11 @@
 <script src="../../assets/js/vendor/popper.min.js"></script>
 
 <!-- Icons -->
-<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 <script>
   feather.replace()
 </script>
+
 
 <!-- Graphs -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
@@ -266,7 +266,7 @@
         }]
       },
       legend: {
-        display: false,
+        display: false
       }
     }
   });

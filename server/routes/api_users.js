@@ -27,17 +27,6 @@ var passport = require('passport');
 router.use(expressValidator());
 router.use(cookieParser('JlNyXZDRfW8bKhZT9oR5XYZ'));
 router.use(bodyParser());
-// router.use(expressSession({
-//   secret: 'JlNyXZDRfW8bKhZT9oR5XYZ',
-//   resave: false,
-//   saveUninitialized: false,
-//   store: sessionStore,
-//   //Todo: change this
-//   cookie: {secure: false}
-// }));
-// router.use(passport.initialize());
-// router.use(passport.session());
-
 
 
 router.get('/', function (req, res) {
@@ -45,7 +34,9 @@ router.get('/', function (req, res) {
 });
 
 
-//Check connection to scrawler db
+/**
+ * Verifies connection to db
+ */
 connection.connect(function (error) {
   if (!error) {
     console.log('Connected to DB users!')
@@ -54,7 +45,9 @@ connection.connect(function (error) {
   }
 });
 
-//To register
+/**
+ * Registers user in the db
+ */
 router.post('/register', function (req, res) {
   console.log('Registering user');
   //Validate
@@ -68,7 +61,7 @@ router.post('/register', function (req, res) {
   const errors = req.validationErrors();
   if (errors) {
     console.log(errors[0].param);
-    res.send(JSON.stringify({ message: errors[0].param }));
+    res.send(JSON.stringify({message: errors[0].param}));
   }
   else {
     var firstname = req.body.firstname;
@@ -87,7 +80,7 @@ router.post('/register', function (req, res) {
             message = 'You have already registered. If you forgot your password, go to the login page and click ' +
               'the Forgot my password button.'
           }
-          res.send(JSON.stringify({ message: message }));
+          res.send(JSON.stringify({message: message}));
 
         }
         else {
@@ -95,7 +88,7 @@ router.post('/register', function (req, res) {
           connection.query('SELECT LAST_INSERT_ID() AS user_id', function (error, results, fields) {
             if (error) {
               console.log(error);
-              res.send(JSON.stringify({ message: error.message }));
+              res.send(JSON.stringify({message: error.message}));
             }
             else {
               //If everything works logging in, get the user_id
@@ -105,13 +98,53 @@ router.post('/register', function (req, res) {
                 if (err) throw err;
                 res.status(200);
                 console.log('User successfully logged in from register: ' + req.user);
-                res.send(JSON.stringify({ message: "success"}));
-                });
+                res.send(JSON.stringify({message: "success"}));
+              });
             }
           });
         }
       })
   }
+});
+
+
+/**
+ * Logs in the user into de db
+ */
+router.post('/login', function (req, res, next) {
+  //Using custom callback
+  passport.authenticate('local', function (err, user, info) {
+    console.log(err);
+    if (err) {
+      //This happens if there was an error finding the user at all
+      return res.send({success: false, message: err});
+    }
+    else if (!user) {
+      //If the passwords did not match
+      return res.send({success: false, message: 'Your password is incorrect!'});
+    } else {
+      //Manually log user in since we are using a custom callback
+      //This goes to serializedUser (part of passport)
+      req.login(user.user_id, function (err) {
+        if (err) throw err;
+        res.status(200);
+        console.log('User successfully logged in from register: ' + req.user);
+        return res.send({success: true, message: 'success'});
+      });
+    }
+  })(req, res, next);
+});
+
+/**
+ * Logs out the user
+ */
+router.get('/logout', function (req, res) {
+  //Logout user
+  console.log("Logging out");
+  req.logout();
+  //Clear session
+  req.session.destroy();
+  res.send({success: true})
 });
 
 
@@ -123,48 +156,22 @@ passport.deserializeUser(function (user_id, done) {
   done(null, user_id);
 });
 
+
 /**
- * Verify if user is logged in
+ * Verifies if user is logged in
  */
 router.get('/getauth', function (req, res, next) {
-  console.log('User Trying to authenticate: '+  req.user);
-  console.log('Is Authenticated '+  req.isAuthenticated());
+  console.log('User Trying to authenticate: ' + req.user);
+  console.log('Is Authenticated ' + req.isAuthenticated());
   if (req.isAuthenticated()) {
     console.log('valid user');
-    res.send(JSON.stringify({ status: true }));
+    res.send(JSON.stringify({status: true}));
   } else {
     console.log('Invalid user');
-    res.send(JSON.stringify({ status: false }));
+    res.send(JSON.stringify({status: false}));
 
   }
 });
 
-
-/**
- * Handles the backend when we lose connection to the database
- */
-function handleDisconnect() {
-  console.log("Trying to reconnect");
-  connection = mysql.createConnection(options); // Recreate the connection, since
-                                                  // the old one cannot be reused.
-
-  connection.connect(function(err) {              // The server is either down
-    if(err) {                                     // or restarting (takes a while sometimes).
-      console.log('error when connecting to db:', err);
-      setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
-    }                                     // to avoid a hot loop, and to allow our node script to
-  });                                     // process asynchronous requests in the meantime.
-                                          // If you're also serving http, display a 503 error.
-  connection.on('error', function(err) {
-    console.log('db error', err);
-    if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
-      handleDisconnect();                         // lost due to either server restart, or a
-    } else {                                      // connnection idle timeout (the wait_timeout
-      throw err;                                  // server variable configures this)
-    }
-  });
-}
-
-handleDisconnect();
 
 module.exports = router;

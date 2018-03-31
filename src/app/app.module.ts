@@ -16,7 +16,7 @@ import {AuthService} from "./auth.service";
 import {AuthGuard} from "./auth.guard";
 import {ParticlesModule} from "angular-particle";
 import { AboutComponent } from './about/about.component';
-
+import {NegAuthGuard} from "./neg-auth.guard";
 
 @NgModule({
   declarations: [
@@ -38,7 +38,7 @@ import { AboutComponent } from './about/about.component';
     ChartsModule,
     ParticlesModule
   ],
-  providers: [AuthService, AuthGuard],
+  providers: [AuthService, AuthGuard, NegAuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

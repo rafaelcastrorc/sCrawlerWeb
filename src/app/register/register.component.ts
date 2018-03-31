@@ -10,11 +10,11 @@ import {Router} from "@angular/router";
 export class RegisterComponent implements OnInit {
 
   inputFirstNameText: string;
-   inputLastNameText: string;
-   inputEmailText: string;
+  inputLastNameText: string;
+  inputEmailText: string;
   inputPasswordText: string;
-   error: string;
-   thereWasAnError = false;
+  error: string;
+  thereWasAnError = false;
 
   constructor(private Auth: AuthService, private router: Router) {
   }
@@ -40,15 +40,10 @@ export class RegisterComponent implements OnInit {
               this.error = 'The email you submitted is invalid!'
             } else if (this.error === 'password') {
               this.error = 'The password you submitted is invalid!'
-            } else if (this.error=== 'firstname') {
+            } else if (this.error === 'firstname') {
               this.error = 'The first name you submitted is invalid!'
-            } else if (this.error=== 'lastname') {
+            } else if (this.error === 'lastname') {
               this.error = 'The last name you submitted is invalid!'
-            } else if (this.error === 'You have already registered. If you forgot your password, go to the login' +
-              ' page and click on the Forgot my password button.') {
-            } else {
-              //If it is not any of those errors, then show a pop up window
-              window.alert(this.error);
             }
           }
 

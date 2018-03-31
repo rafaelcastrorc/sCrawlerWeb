@@ -1,24 +1,55 @@
+<body class="text-center mt-autoh">
+<!--Main error message-->
 
-<body class="text-center">
-<form class="form-signin" (submit)="loginUser($event)">
-  <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
-  <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+<form class="form-signin" (submit)="loginUser($event)" #signinForm="ngForm">
+  <img class="mb-4" src="../../assets/img/smalliconlogobg.svg" alt="" width="72" height="72">
+
+  <h1 class="h3 mb-3 font-weight-normal">Please log in</h1>
+  <div *ngIf="thereWasAnError" class="alert alert-danger alert-dismissible fade show">
+    {{error}}
+    <button (click)="thereWasAnError = false" type="button" class="close" data-dismiss="alert" aria-label="Close"
+            style="outline: none !important; box-shadow: none !important">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
   <label for="inputEmail" class="sr-only">Email address</label>
-  <input [(ngModel)] = "email" name = "none" type="email" id="inputEmail" class="form-control"
+  <input [(ngModel)]="email" name="inputEmail" #inputEmail="ngModel" type="email" id="inputEmail"
+         class="form-control"
          placeholder="Email address"
          required
-  autofocus>
+         autofocus
+         email>
+  <div *ngIf="inputEmail.errors && (inputEmail.dirty || inputEmail.touched)" class="alert alert-danger">
+    <div [hidden]="!inputEmail.errors.required">
+      You need to write your email!
+    </div>
+    <div [hidden]="!inputEmail.errors.email">
+      This is not a valid email!
+    </div>
+  </div>
+
 
   <label for="inputPassword" class="sr-only">Password</label>
-  <input [(ngModel)] = "password" name = "none" type="password" id="inputPassword" class="form-control"
+  <input [(ngModel)]="password" name="inputPassword" #inputPassword="ngModel" type="password"
+         id="inputPassword"
+         class="form-control"
          placeholder="Password"
          required>
-  <div class="checkbox mb-3">
-    <label>
-      <input type="checkbox" value="remember-me"> Remember me
-    </label>
+  <div *ngIf="inputPassword.errors && (inputPassword.dirty || inputPassword.touched)" class="alert alert-danger">
+    <div [hidden]="!inputPassword.errors.required">
+      You need to write your password!
+    </div>
   </div>
-  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-  <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+
+  <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="!signinForm.form.valid"
+          style="outline: none !important; box-shadow: none !important; ">Log in
+  </button>
 </form>
+<div class="footer">
+  <p>Developed & Designed by Rafael Castro - <a href="https://github.com/rafaelcastrorc">GitHub</a>.</p>
+</div>
 </body>
+
+
+

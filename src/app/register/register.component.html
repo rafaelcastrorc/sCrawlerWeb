@@ -1,10 +1,10 @@
 <body class="text-center mt-autoh">
-<form class="form-signin" (submit)="registerUser($event)" #signinForm = "ngForm">
+<!--Main error message-->
+
+<form class="form-signin" (submit)="registerUser($event)" #signinForm="ngForm">
   <img class="mb-4" src="../../assets/img/smalliconlogobg.svg" alt="" width="72" height="72">
 
   <h1 class="h3 mb-3 font-weight-normal">Please register</h1>
-
-  <!--Main error message-->
   <div *ngIf="thereWasAnError" class="alert alert-danger alert-dismissible fade show">
     {{error}}
     <button (click)="thereWasAnError = false" type="button" class="close" data-dismiss="alert" aria-label="Close"
@@ -57,7 +57,7 @@
 
 
   <label for="inputPassword" class="sr-only">Password</label>
-  <input [(ngModel)]="inputPasswordText" name="inputPassword" #inputPassword = "ngModel" type="password"
+  <input [(ngModel)]="inputPasswordText" name="inputPassword" #inputPassword="ngModel" type="password"
          id="inputPassword"
          class="form-control"
          placeholder="Password"
@@ -74,21 +74,14 @@
     </div>
   </div>
 
-
-  <!--<label for="confirmInputPassword" class="sr-only">Confirm password</label>-->
-  <!--<input [(ngModel)]="password" name="none" type="password" id="confirmInputPassword" class="form-control"-->
-         <!--placeholder="Password"-->
-         <!--required-->
-         <!--minlength="6">-->
-  <!--&lt;!&ndash;pattern=^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]'{'8,}$">&ndash;&gt;-->
-
-  <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled] = "!signinForm.form.valid"
+  <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="!signinForm.form.valid"
           style="outline: none !important; box-shadow: none !important; ">Register
   </button>
 </form>
-</body>
-
 <div class="footer">
   <p>Developed & Designed by Rafael Castro - <a href="https://github.com/rafaelcastrorc">GitHub</a>.</p>
 </div>
+</body>
+
+
 
