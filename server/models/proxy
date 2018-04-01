@@ -1,0 +1,10 @@
+function Proxy(ip, port, cookies, search_engine) {
+  this.ip =  ip;
+  this.port = port;
+  this.cookies = cookies;
+  this.search_engine = search_engine;
+}
+
+// export the class
+module.exports = Proxy;
+
