@@ -5,6 +5,8 @@ const express = require('express');
 const router = express.Router();
 var mysql = require('mysql');
 // Todo: This should change to be depending on the user settings
+var bcrypt = require('bcrypt');
+
 var options = {
   host: 'sql9.freemysqlhosting.net',
   port: '3306',
@@ -91,6 +93,7 @@ router.post('/operation', function (req, res) {
 router.post('/login', function (req, res, next) {
   var username = req.body.username;
   var password = req.body.password;
+  console.log(username);
   connection.query('SELECT id, password, first_name, last_name FROM users WHERE email = ?', [username], function (err, results, fields) {
     if (err) {
       return res.send({success: false, message: err});
