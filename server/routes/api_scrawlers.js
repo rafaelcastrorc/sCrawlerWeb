@@ -17,6 +17,8 @@ var options = {
 var connection = mysql.createConnection(options);
 
 const Scrawler = require('../models/scrawler');
+const Proxy = require('../models/proxy');
+
 
 router.get('/', function (req, res) {
   res.send('sCrawler APi  works!');
@@ -126,15 +128,15 @@ router.post('/login', function (req, res, next) {
 /**
  * Checks the login credentials of a sCrawler instance. Does not create a session
  */
-function auth(username, password) {
+var authentication = function (username, password, callback) {
   connection.query('SELECT id, password FROM users WHERE email = ?', [username], function (err, results, fields) {
     if (err) {
-      return false;
+      callback(false);
+
     }
     //If there is no user with this email
-    if (results.length === 0) {
-      return false;
-
+    else if (results.length === 0) {
+      callback(false);
     } else {
       //Get the hashed password in the db
       const hash = results[0].password.toString();
@@ -142,40 +144,95 @@ function auth(username, password) {
       //Verify if password matches
       bcrypt.compare(password, hash, function (err, response) {
         //If they match, return the user id
-        return response === true;
+
+        callback(response === true);
+
       });
 
     }
-  })
-}
+  });
+};
 
 /**
  * Get all unlocked proxies
  */
-router.get('/unlockedCookies', function (req, res) {
+router.post('/unlocked_cookies', function (req, res) {
   var username = req.body.username;
   var password = req.body.password;
-  if (!auth(username, password)) {
-    res.status(400);
-    res.send('You are not authorized');
-  }
-  console.log('Getting all unlocked proxies');
-  var query = 'SELECT * FROM proxies WHERE unlocked';
+  authentication(username, password, function (isAuth) {
+    console.log(isAuth);
+    if (isAuth) {
+      console.log('Getting all unlocked proxies');
+      var query = 'SELECT * FROM proxies WHERE unlocked';
+
+      console.log(query);
+      connection.query(query, function (err, rows, fields) {
+        if (err) console.log('There was an error ' + err);
+        else {
+          let queryAns = [];
+          for (var i = 0; i < rows.length; i++) {
+            let proxy = new Proxy(rows[i].ip, rows[i].port, rows[i].cookies, rows[i].search_engine);
+            queryAns.push(proxy);
+
+          }
+          res.json(queryAns);
+        }
+      });
+    } else {
+      res.status(400);
+      res.send('You are not authorized');
+
+    }
+
+  })
+});
+
+/**
+ * Get all unlocked proxies
+ */
+router.get('/version', function (req, res) {
+  console.log('Getting latest version');
+  var query = 'SELECT * FROM versions ';
 
   console.log(query);
   connection.query(query, function (err, rows, fields) {
     if (err) console.log('There was an error ' + err);
     else {
-      let queryAns = [];
-      for (var i = 0; i < rows.length; i++) {
-        let proxy = new Proxy(rows[i].ip, rows[i].port, rows[i].cookies, rows[i].search_engine);
-        queryAns.push(proxy);
-
-      }
-      res.json(queryAns);
+      console.log(rows[0]);
+      res.json(rows[0]);
     }
   });
 });
+
+
+// /**
+//  * Get all unlocked proxies
+//  */
+// router.post('/unlocked', function (req, res) {
+//   var username = req.body.username;
+//   var password = req.body.password;
+//   if (!auth(username, password)) {
+//     res.status(400);
+//     res.send('You are not authorized');
+//   } else {
+//     console.log('Getting all unlocked proxies');
+//     var query = 'SELECT * FROM proxies WHERE unlocked';
+//
+//     console.log(query);
+//     connection.query(query, function (err, rows, fields) {
+//       if (err) console.log('There was an error ' + err);
+//       else {
+//         let queryAns = [];
+//         for (var i = 0; i < rows.length; i++) {
+//           let proxy = new Proxy(rows[i].ip, rows[i].port, rows[i].cookies, rows[i].search_engine);
+//           queryAns.push(proxy);
+//
+//         }
+//         res.json(queryAns);
+//       }
+//     });
+//   }
+// });
 
 
 module.exports = router;
