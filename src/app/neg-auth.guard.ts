@@ -19,11 +19,12 @@ export class NegAuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     if (this.auth.isLoggedIn) {
+      this.router.navigate(['scrawlers']);
       return false;
     }
     return this.auth.verifyLoggingStatus().pipe(map(res => {
       if (res.status) {
-        this.router.navigate(['scrawler']);
+        this.router.navigate(['scrawlers']);
         //Change login status if user is authenticated
         return false;
       } else {

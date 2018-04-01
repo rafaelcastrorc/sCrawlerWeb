@@ -8,7 +8,7 @@ body {
   color: #ffffff;
 }
 
-.feather {
+.icons {
   width: 16px;
   height: 16px;
   vertical-align: text-bottom;
@@ -44,17 +44,17 @@ body {
   color: #ffffff;
 }
 
-.sidebar .nav-link .feather {
+.sidebar .nav-link .icons {
   margin-right: 4px;
-  color: #999;
+  color: #ffffff;
 }
 
 .sidebar .nav-link.active {
   color: #86C232;
 }
 
-.sidebar .nav-link:hover .feather,
-.sidebar .nav-link.active .feather {
+.sidebar .nav-link:hover .icons,
+.sidebar .nav-link.active .icons {
   color: inherit;
 }
 
@@ -64,26 +64,9 @@ body {
   color: #ffffff;
 }
 
-.navbar .form-control {
-  padding: .75rem 1rem;
-  border-width: 0;
-  border-radius: 0;
-}
-
-.form-control-dark {
-  color: #fff;
-  background-color: rgba(134, 194, 50, 0.1);
-  border-color: rgba(134, 194, 82, 0.1);
-}
-
-.form-control-dark:focus {
-  border-color: transparent;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
-}
-
 /*
  * Utilities
  */
-
 .border-top { border-top: 1px solid #e5e5e5; }
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
+

@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
     this.auth.verifyLoggingStatus2().subscribe(data => {
       this.userLoggedIn = (data.status);
     });
+
     //If not, listen to changes in login or register
     this.auth.observableStatus.subscribe(status => this.userLoggedIn = status);
   }

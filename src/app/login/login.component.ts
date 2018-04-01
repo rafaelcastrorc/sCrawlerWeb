@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   @Output() onLoginStatus = new EventEmitter<boolean>();
 
 
-  constructor(private Auth: AuthService, private router: Router ) {
+  constructor(private auth: AuthService, private router: Router ) {
   }
 
   ngOnInit() {
@@ -26,14 +26,20 @@ export class LoginComponent implements OnInit {
   loginUser(event) {
     this.thereWasAnError = false;
     event.preventDefault();
-    this.Auth.loginUser(this.email, this.password).subscribe(
+    this.auth.loginUser(this.email, this.password).subscribe(
       data => {
         //If there is no message, registration was successful
         if (data.message === 'success') {
-          //Redirect person to scrawler page
-          this.Auth.verifyLoggingStatus();
-          this.router.navigate(['scrawlers']);
+          this.auth.verifyLoggingStatus();
+          //Notify header that there is a user logged in (To display
+          // logout button)
           this.onLoginStatus.emit(true);
+          //Change the name of the user in auth service
+          this.auth.setUserName(data.firstName, data.lastName);
+          //Redirect person to scrawler page
+          this.router.navigate(['scrawlers']);
+
+
         } else {
           this.thereWasAnError = true;
           this.error = data.message;

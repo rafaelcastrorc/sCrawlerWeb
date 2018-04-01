@@ -114,7 +114,6 @@ router.post('/register', function (req, res) {
 router.post('/login', function (req, res, next) {
   //Using custom callback
   passport.authenticate('local', function (err, user, info) {
-    console.log(err);
     if (err) {
       //This happens if there was an error finding the user at all
       return res.send({success: false, message: err});
@@ -124,12 +123,13 @@ router.post('/login', function (req, res, next) {
       return res.send({success: false, message: 'Your password is incorrect!'});
     } else {
       //Manually log user in since we are using a custom callback
-      //This goes to serializedUser (part of passport)
+      //This goes to the serializedUser function (part of passport)
       req.login(user.user_id, function (err) {
         if (err) throw err;
         res.status(200);
+        console.log(user);
         console.log('User successfully logged in from register: ' + req.user);
-        return res.send({success: true, message: 'success'});
+        return res.send({success: true, message: 'success', firstName: user.first_name, lastName: user.last_name});
       });
     }
   })(req, res, next);

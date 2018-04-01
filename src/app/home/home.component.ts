@@ -14,8 +14,6 @@ export class HomeComponent implements OnInit {
   myParams: object = {};
   width: number = 100;
   height: number = 100;
-  userLoggedIn: boolean;
-
 
   constructor(private router: Router, private auth: AuthService) {
   }
@@ -69,13 +67,6 @@ export class HomeComponent implements OnInit {
         }
       },
     };
-    //First check if the user is already connected and its just coming back to the page
-    this.auth.verifyLoggingStatus2().subscribe(data => {
-      this.userLoggedIn = (data.status);
-    });
-
-    this.auth.observableStatus.subscribe(status =>
-      this.userLoggedIn = status);
   }
 
   /**

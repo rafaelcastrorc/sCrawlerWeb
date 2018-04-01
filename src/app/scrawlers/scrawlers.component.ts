@@ -11,15 +11,11 @@ export class ScrawlersComponent implements OnInit {
   message = "Loading...";
 
   selectedQuery: String;
-  queries: String[] = [
-    "Show me all active sCrawlers", "Show me a given sCrawler"];
-
-  constructor(private auth: AuthService) {
+  constructor() {
 
   }
 
   ngOnInit() {
-    // this.auth.verifyLoggingStatus();
   }
 
   onSelectQuery(query: String) {

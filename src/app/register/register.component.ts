@@ -30,8 +30,9 @@ export class RegisterComponent implements OnInit {
         data => {
           //If there is no message, registration was successful
           if (data.message === 'success') {
-            //Redirect person to scrawler page
+            this.Auth.setUserName(data.firstName, data.lastName);
             this.Auth.verifyLoggingStatus();
+            //Redirect person to scrawler page
             this.router.navigate(['scrawlers']);
           } else {
             this.thereWasAnError = true;

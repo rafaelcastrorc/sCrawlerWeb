@@ -3,27 +3,59 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
 import 'rxjs/add/observable/of';
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 interface isLoggedIn {
   status: boolean
 }
 
+/**
+ * Interface used for incoming messages from login or register post request
+ */
 interface IncomingMessage {
   message: string
+  firstName: string
+  lastName: string
+
 }
 
 interface LogoutStatus {
   success: boolean
 }
+
 @Injectable()
 export class AuthService {
-
   private _observableStatus = new EventEmitter;
-  private loggedInStatus =  false;
-
+  private loggedInStatus = false;
+  private userFirstNameSource = new BehaviorSubject<string>("");
+  private userLastNameSource = new BehaviorSubject<string>("");
+  private _userFirstNameObservable = this.userFirstNameSource.asObservable();
+  private _userLastNameObservable = this.userLastNameSource.asObservable();
 
   constructor(private http: HttpClient) {
   }
+
+  get isLoggedIn() {
+    return this.loggedInStatus;
+  }
+
+  get observableStatus(): EventEmitter<any> {
+    return this._observableStatus;
+  }
+
+  get userFirstNameObservable(): Observable<string> {
+    return this._userFirstNameObservable;
+  }
+
+  get userLastNameObservable(): Observable<string> {
+    return this._userLastNameObservable;
+  }
+
+  setUserName(firstName: string, lastName: string) {
+    this.userFirstNameSource.next(firstName);
+    this.userLastNameSource.next(lastName);
+  }
+
 
   /**
    * Logs the user in
@@ -62,17 +94,9 @@ export class AuthService {
    */
   setLoggedIn(value: boolean) {
     this._observableStatus.emit(value);
-    this.loggedInStatus =value;
+    this.loggedInStatus = value;
   }
 
-
-  get isLoggedIn() {
-    return this.loggedInStatus;
-  }
-
-  get observableStatus(): EventEmitter<any> {
-    return this._observableStatus;
-  }
 
   /**
    * Access server to check if user is actually logged in

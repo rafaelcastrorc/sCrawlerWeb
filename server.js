@@ -41,6 +41,7 @@ app.use(expressSession({
   secret: 'JlNyXZDRfW8bKhZT9oR5XYZ',
   resave: false,
   saveUninitialized: false,
+  // maxAge: ,
   store: sessionStore,
   //Todo: change this
   cookie: {secure: false}
@@ -53,13 +54,15 @@ app.use(passport.session());
 app.use('/api_scrawlers', apiScrawlers);
 app.use('/api_users', apiUsers);
 
-//For logging in the user
+/**
+ * Logs in the user using the local strategy of passport. This function is called from api_users/login
+ */
 passport.use(new LocalStrategy(
   function (username, password, done) {
     console.log(username);
     console.log(password);
     //We find the associated username in our db. Note that we are using the email as the username
-    connection.query('SELECT id, password FROM users WHERE email = ?', [username], function (err, results, fields) {
+    connection.query('SELECT id, password, first_name, last_name FROM users WHERE email = ?', [username], function (err, results, fields) {
       if (err) {
         done(err)
       }
@@ -76,7 +79,12 @@ passport.use(new LocalStrategy(
 
           //If they match, return the user id
           if (response === true) {
-            return done(null, {user_id: results[0].id});
+            //Pass the id, the first and last name of the user
+            return done(null, {
+              user_id: results[0].id,
+              first_name: results[0].first_name,
+              last_name: results[0].last_name
+            });
 
           } else {
             console.log('Passwords do not match');
@@ -87,8 +95,6 @@ passport.use(new LocalStrategy(
       }
     });
   }));
-
-
 
 
 //Default page is index

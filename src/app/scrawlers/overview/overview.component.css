@@ -1,0 +1,19 @@
+body {
+  font-size: .875rem;
+  font-family: 'Montserrat', sans-serif;
+  min-height: calc(100vh - 70px) !important;
+  height: calc(100vh - 70px) !important;
+  background: #6B6E70;
+  color: #ffffff;
+}
+/*
+ * Utilities
+ */
+.border-top { border-top: 1px solid #e5e5e5; }
+.border-bottom { border-bottom: 1px solid #e5e5e5; }
+
+.icons {
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
+}

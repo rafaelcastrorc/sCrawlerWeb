@@ -8,7 +8,6 @@ import {FormsModule} from "@angular/forms";
 import { DropdownModule } from 'ngx-dropdown';
 import { HttpClientModule } from '@angular/common/http';
 import { ChartsModule } from 'ng2-charts';
-import { VisualizerComponent } from './scrawlers/visualizer/visualizer.component';
 import { LoginComponent } from './login/login.component';
 import { AdminComponent } from './admin/admin.component';
 import { RegisterComponent } from './register/register.component';
@@ -17,17 +16,20 @@ import {AuthGuard} from "./auth.guard";
 import {ParticlesModule} from "angular-particle";
 import { AboutComponent } from './about/about.component';
 import {NegAuthGuard} from "./neg-auth.guard";
+import {IconsModule} from "./icons/icons.module";
+import { OverviewComponent } from './scrawlers/overview/overview.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     ScrawlersComponent,
-    VisualizerComponent,
     LoginComponent,
     AdminComponent,
     RegisterComponent,
     AboutComponent,
+    OverviewComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,8 +37,9 @@ import {NegAuthGuard} from "./neg-auth.guard";
     FormsModule,
     DropdownModule,
     HttpClientModule,
-    ChartsModule,
-    ParticlesModule
+    ParticlesModule,
+    IconsModule,
+    ChartsModule
   ],
   providers: [AuthService, AuthGuard, NegAuthGuard],
   bootstrap: [AppComponent]

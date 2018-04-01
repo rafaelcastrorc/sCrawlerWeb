@@ -5,10 +5,7 @@ body {
   width: 100%;
   font-family: 'Montserrat', sans-serif;
   color: #ffffff;
-  overflow: auto;
   background-color: #474B4F;
-
-
 }
 
 body {
@@ -103,6 +100,8 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+
 /*
  * Footer
  */
@@ -113,4 +112,6 @@ body {
   width: 100%;
   color: rgba(255, 255, 255, .5);
   text-align: center;
+  z-index: 998;
+  height: 30px;
 }

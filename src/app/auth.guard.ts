@@ -20,8 +20,11 @@ export class AuthGuard implements CanActivate {
       if (res.status) {
         //Change login status if user is authenticated
         this.auth.setLoggedIn(true);
+        //Return true so it lets us navigate to the page
         return true;
       } else {
+        this.auth.setLoggedIn(false);
+        //Send user to login screen
         this.router.navigate(['login']);
         return false;
       }

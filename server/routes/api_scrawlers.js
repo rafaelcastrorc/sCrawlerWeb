@@ -86,29 +86,37 @@ router.post('/operation', function (req, res) {
 
 
 /**
- * Handles the backend when we lose connection to the database
+ * Checks the login credentials of a sCrawler instance. Does not create a session
  */
-function handleDisconnect() {
-  connection = mysql.createConnection(options); // Recreate the connection, since
-  // the old one cannot be reused.
-
-  connection.connect(function(err) {              // The server is either down
-    if(err) {                                     // or restarting (takes a while sometimes).
-      console.log('error when connecting to db:', err);
-      setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
-    }                                     // to avoid a hot loop, and to allow our node script to
-  });                                     // process asynchronous requests in the meantime.
-                                          // If you're also serving http, display a 503 error.
-  connection.on('error', function(err) {
-    console.log('db error', err);
-    if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
-      handleDisconnect();                         // lost due to either server restart, or a
-    } else {                                      // connnection idle timeout (the wait_timeout
-      throw err;                                  // server variable configures this)
+router.post('/login', function (req, res, next) {
+  connection.query('SELECT id, password, first_name, last_name FROM users WHERE email = ?', [username], function (err, results, fields) {
+    if (err) {
+      return res.send({success: false, message: err});
     }
-  });
-}
+    //If there is no user with this email
+    if (results.length === 0) {
+      return res.send({success: false, message: 'There is no user with such email'});
 
-handleDisconnect();
+    } else {
+      //Get the hashed password in the db
+      const hash = results[0].password.toString();
+      console.log(hash);
+      //Verify if password matches
+      bcrypt.compare(password, hash, function (err, response) {
+        //If they match, return the user id
+        if (response === true) {
+          //Pass the id, the first and last name of the user
+          return res.send({success: true, message: 'success'});
+        }
+        else {
+          console.log('Passwords do not match');
+          return res.send({success: false, message: 'Passwords do not match'});
+        }
+      });
+
+    }
+  })
+});
+
 
 module.exports = router;
