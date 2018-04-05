@@ -156,7 +156,7 @@ var authentication = function (username, password, callback) {
 /**
  * Get all unlocked proxies
  */
-router.post('/unlocked_cookies', function (req, res) {
+router.post('/unlocked_proxies', function (req, res) {
   var username = req.body.username;
   var password = req.body.password;
   authentication(username, password, function (isAuth) {
@@ -188,7 +188,7 @@ router.post('/unlocked_cookies', function (req, res) {
 });
 
 /**
- * Get all unlocked proxies
+ * Get latest version
  */
 router.get('/version', function (req, res) {
   console.log('Getting latest version');
@@ -204,35 +204,91 @@ router.get('/version', function (req, res) {
   });
 });
 
+/**
+ * Gets the cookie associated to an unlocked proxy
+ */
+router.post('/unlocked_cookie', function (req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var ip = req.body.ip;
+  var port = parseInt(req.body.port);
+  var search_engine = req.body.search_engine;
 
-// /**
-//  * Get all unlocked proxies
-//  */
-// router.post('/unlocked', function (req, res) {
-//   var username = req.body.username;
-//   var password = req.body.password;
-//   if (!auth(username, password)) {
-//     res.status(400);
-//     res.send('You are not authorized');
-//   } else {
-//     console.log('Getting all unlocked proxies');
-//     var query = 'SELECT * FROM proxies WHERE unlocked';
-//
-//     console.log(query);
-//     connection.query(query, function (err, rows, fields) {
-//       if (err) console.log('There was an error ' + err);
-//       else {
-//         let queryAns = [];
-//         for (var i = 0; i < rows.length; i++) {
-//           let proxy = new Proxy(rows[i].ip, rows[i].port, rows[i].cookies, rows[i].search_engine);
-//           queryAns.push(proxy);
-//
-//         }
-//         res.json(queryAns);
-//       }
-//     });
-//   }
-// });
+  authentication(username, password, function (isAuth) {
+    console.log(isAuth);
+    if (isAuth) {
+      console.log('Getting cookie');
+      console.log('SELECT cookies FROM proxies WHERE ip = ? AND port = ? AND search_engine = ?', [ip, parseInt(port), search_engine]);
+      connection.query('SELECT cookies FROM proxies WHERE ip = ? AND port = ? AND search_engine = ?', [ip, parseInt(port), search_engine], function (err, rows, fields) {
+        let cookie = {cookie: ""};
+        if (err) console.log('There was an error ' + err);
+        else {
+          //Get the cookies for the proxy
+          for (var i = 0; i < rows.length; i++) {
+            cookie = {'cookie': rows[i].cookies};
+          }
+          console.log(cookie);
+          res.json(cookie);
+
+        }
+      })
+    }
+    else {
+      res.status(400);
+      res.send('You are not authorized');
+    }
+
+  })
+});
+
+
+/**
+ * Checks if proxy is not locked
+ */
+router.get('/is_unlocked/:ip/:port', function (req, res) {
+  var ip = req.params.ip;
+  var port = parseInt(req.params.port);
+  console.log('Checking if proxy is unlocked');
+  console.log('SELECT cookies FROM proxies WHERE ip = ? AND port = ?', [ip, port]);
+  connection.query('SELECT unlocked, num_of_instances FROM proxies WHERE ip=? AND port=?', [ip, port], function (err, rows, fields) {
+    if (err) console.log('There was an error ' + err);
+    else {
+      //If result is empty
+      if (rows.length === 0) {
+        res.json();
+      }
+      else {
+        //Send object
+        res.json({'unlocked': rows[0].unlocked, 'num_of_instances': rows[0].num_of_instances});
+      }
+    }
+  });
+});
+
+
+/**
+ * Checks if this instance is already using the proxy
+ */
+router.get('/is_using_proxy/:ip/:port', function (req, res) {
+  var ip = req.params.ip;
+  var port = parseInt(req.params.port);
+
+  console.log('Checking if instance is already using proxy');
+  console.log('SELECT scrawler_id FROM scrawler_to_proxy WHERE ip=? AND port=?', [ip, port]);
+  connection.query('SELECT scrawler_id FROM scrawler_to_proxy WHERE ip=? AND port=?', [ip, port], function (err, rows, fields) {
+    if (err) console.log('There was an error ' + err);
+    else {
+      //If result is empty
+      if (rows.length === 0) {
+        res.json();
+      }
+      else {
+        //Send object
+        res.json({'scrawler_id': rows[0].scrawler_id});
+      }
+    }
+  });
+});
 
 
 module.exports = router;
