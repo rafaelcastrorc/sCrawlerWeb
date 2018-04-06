@@ -18,6 +18,7 @@ var connection = mysql.createConnection(options);
 
 const Scrawler = require('../models/scrawler');
 const Proxy = require('../models/proxy');
+const ListOfProxies = require('../models/list_of_proxies');
 
 
 router.get('/', function (req, res) {
@@ -241,6 +242,145 @@ router.post('/unlocked_cookie', function (req, res) {
   })
 });
 
+/**
+ * Sets into the db the number of proxies found in a website
+ */
+router.post('/set_number_of_proxies', function (req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var numberOfProxies = req.body.numberOfProxies;
+  var website = req.body.website;
+
+  authentication(username, password, function (isAuth) {
+    console.log(isAuth);
+    if (isAuth) {
+      console.log('Setting number of proxies');
+      console.log('UPDATE list_of_websites SET numOfProxiesFound = ? WHERE website = ? ',
+        [parseInt(numberOfProxies), website]);
+      connection.query('UPDATE list_of_websites SET numOfProxiesFound = ? WHERE website = ? ',
+        [parseInt(numberOfProxies), website], function (err, result) {
+        if (err) {
+          console.log('There was an error ' + err);
+          res.json({'success': false, 'message': err});
+        }
+        else {
+          //Send message saying the number of rows modified
+          res.json({'success': true, 'message': result.affectedRows + " record(s) updated"});
+        }
+      })
+    }
+    else {
+      res.status(400);
+      res.send('You are not authorized');
+    }
+
+  })
+});
+
+/**
+ * Sets into the db the last time a website was visited
+ */
+router.post('/set_website_time', function (req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var website = req.body.website;
+  var visited = req.body.visited;
+
+  authentication(username, password, function (isAuth) {
+    console.log(isAuth);
+    if (isAuth) {
+      console.log('Updating website time');
+      console.log('UPDATE list_of_websites SET visited = ? WHERE website = ?',
+        [visited, website]);
+      connection.query('UPDATE list_of_websites SET visited = ? WHERE website = ?',
+        [visited, website], function (err, result) {
+          if (err) {
+            console.log('There was an error ' + err);
+            res.json({'success': false, 'message': err});
+          }
+          else {
+            //Send message saying the number of rows modified
+            res.json({'success': true, 'message': result.affectedRows + " record(s) updated"});
+          }
+        })
+    }
+    else {
+      res.status(400);
+      res.send('You are not authorized');
+    }
+
+  })
+});
+
+/**
+ * Adds a proxy into the list of proxies
+ */
+router.post('/add_to_list_of_proxies', function (req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var ip = req.body.ip;
+  var port = parseInt(req.body.port);
+  var time = req.body.time;
+
+  authentication(username, password, function (isAuth) {
+    console.log(isAuth);
+    if (isAuth) {
+      console.log('Inserting proxy into list of proxies');
+      console.log('INSERT INTO list_of_proxies (ip, port, time) VALUES (?, ?, ?)',
+        [ip, port, time]);
+      connection.query('INSERT INTO list_of_proxies (ip, port, time) VALUES (?, ?, ?)',
+        [ip, port, time], function (err, result) {
+          if (err) {
+            console.log('There was an error ' + err);
+            res.json({'success': false, 'message': err});
+          }
+          else {
+            //Send message saying the number of rows modified
+            res.json({'success': true, 'message': result.affectedRows + " record(s) added"});
+          }
+        })
+    }
+    else {
+      res.status(400);
+      res.send('You are not authorized');
+    }
+
+  })
+});
+
+/**
+ * Delete from list of proxies
+ */
+router.post('/delete_from_list_of_proxies', function (req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var ip = req.body.ip;
+  var port = parseInt(req.body.port);
+
+  authentication(username, password, function (isAuth) {
+    console.log(isAuth);
+    if (isAuth) {
+      console.log('Delete proxy from list of proxies');
+      console.log('DELETE FROM list_of_proxies WHERE ip = ? AND port = ?', [ip, port]);
+      connection.query('DELETE FROM list_of_proxies WHERE ip = ? AND port = ?', [ip, port], function (err, result) {
+          if (err) {
+            console.log('There was an error ' + err);
+            res.json({'success': false, 'message': err});
+          }
+          else {
+            //Send message saying the number of rows modified
+            res.json({'success': true, 'message': result.affectedRows + " record(s) deleted"});
+          }
+        })
+    }
+    else {
+      res.status(400);
+      res.send('You are not authorized');
+    }
+
+  })
+});
+
 
 /**
  * Checks if proxy is not locked
@@ -285,6 +425,54 @@ router.get('/is_using_proxy/:ip/:port', function (req, res) {
       else {
         //Send object
         res.json({'scrawler_id': rows[0].scrawler_id});
+      }
+    }
+  });
+});
+
+/**
+ * Gets all the proxy compiling websites
+ */
+router.get('/list_of_websites', function (req, res) {
+  console.log('Retrieving all the websites');
+  connection.query('SELECT website, visited FROM list_of_websites ', function (err) {
+    if (err) console.log('There was an error ' + err);
+    else {
+      //If result is empty
+      if (rows.length === 0) {
+        res.json();
+      }
+      else {
+        let queryAns = [];
+        for (var i = 0; i < rows.length; i++) {
+          let website = {'website': rows[i].website, 'visited': rows[i].visited};
+          queryAns.push(website);
+        }
+        res.json(queryAns);
+      }
+    }
+  });
+});
+
+/**
+ * Gets all the proxy compiling websites
+ */
+router.get('/list_of_proxies', function (req, res) {
+  console.log('Retrieving all the current proxies');
+  connection.query('SELECT * FROM list_of_proxies', function (err, rows) {
+    if (err) console.log('There was an error ' + err);
+    else {
+      //If result is empty
+      if (rows.length === 0) {
+        res.json([]);
+      }
+      else {
+        let queryAns = [];
+        for (var i = 0; i < rows.length; i++) {
+          let proxy = new ListOfProxies(rows[i].ip, rows[i].port, rows[i].time);
+          queryAns.push(proxy);
+        }
+        res.json(queryAns);
       }
     }
   });

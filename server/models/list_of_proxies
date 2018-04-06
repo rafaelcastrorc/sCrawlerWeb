@@ -1,0 +1,15 @@
+/**
+ * Represents the list_of_proxies table in the db
+ * @param ip
+ * @param port
+ * @param time
+ */
+function proxyList(ip, port, time) {
+  this.ip =  ip;
+  this.port = port;
+  this.time = time;
+}
+
+// export the class
+module.exports = proxyList;
+
