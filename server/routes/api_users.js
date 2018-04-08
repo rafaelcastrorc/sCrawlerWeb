@@ -1,6 +1,6 @@
 /**
  * Developed by Rafael Castro
- * Handles everything related to user registration and logging in/out
+ * Handles everything related to user actions. Logging in, sending request to server, etc
  */
 const express = require('express');
 const router = express.Router();
@@ -173,5 +173,56 @@ router.get('/getauth', function (req, res, next) {
   }
 });
 
+
+/**
+ * Allows the user to perform an operation on an instance
+ */
+router.post('/perform_operation', function (req, res) {
+  var operation = req.body.operation;
+  var id = req.body.id;
+
+  //Check if user is auth
+  if (req.isAuthenticated()) {
+    // Perform operation only if user has this instance
+    connection.query('UPDATE scrawlers SET operation = ? ' +
+      'WHERE id = ? AND EXISTS(SELECT * FROM user_to_instance WHERE user_id = ? AND instance = ?) ',
+      [operation, id, req.user, id], function (err, result) {
+        if (err) {
+          res.json({'success': false, 'message': err.code});
+        }
+        else {
+          //Send message saying the number of rows modified
+          res.json({'success': true, 'message': result.affectedRows + " record(s) updated"});
+        }
+      });
+
+  } else {
+    res.send(JSON.stringify({status: false, message: 'You are not authenticated!'}));
+
+  }
+
+
+});
+
+
+//To get all active crawlers
+router.get('/instances', function (req, res) {
+  console.log('Getting all scrawlers that is user has');
+  var query = 'SELECT id, location FROM scrawlers S JOIN user_to_instance U ON ? = U.user_id';
+
+  console.log(query);
+  connection.query(query, [req.user], function (err, rows, fields) {
+    if (err) console.log('There was an error ' + err);
+    else {
+      //res.json(rows[0].id);
+      let queryAns = [];
+      for (var i = 0; i < rows.length; i++) {
+        let scrawler = ({'id': rows[i].id, 'location': rows[i].location});
+        queryAns.push(scrawler);
+      }
+      res.json(queryAns);
+    }
+  });
+});
 
 module.exports = router;

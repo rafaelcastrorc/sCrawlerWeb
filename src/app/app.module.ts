@@ -18,6 +18,8 @@ import { AboutComponent } from './about/about.component';
 import {NegAuthGuard} from "./neg-auth.guard";
 import {IconsModule} from "./icons/icons.module";
 import { OverviewComponent } from './scrawlers/overview/overview.component';
+import {DashboardService} from "./dashboard.service";
+import { OrderModule } from 'ngx-order-pipe';
 
 
 @NgModule({
@@ -39,9 +41,10 @@ import { OverviewComponent } from './scrawlers/overview/overview.component';
     HttpClientModule,
     ParticlesModule,
     IconsModule,
-    ChartsModule
+    ChartsModule,
+    OrderModule
   ],
-  providers: [AuthService, AuthGuard, NegAuthGuard],
-  bootstrap: [AppComponent]
+  providers: [AuthService, AuthGuard, NegAuthGuard, DashboardService],
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

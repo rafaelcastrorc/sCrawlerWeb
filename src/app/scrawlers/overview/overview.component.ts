@@ -1,22 +1,35 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../auth.service";
+import {DashboardService} from "../../dashboard.service";
+import {OrderPipe} from 'ngx-order-pipe';
+
 
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',
-  styleUrls: ['./overview.component.css']
+  styleUrls: ['./overview.component.css'],
 })
 export class OverviewComponent implements OnInit {
   firstName: string;
   lastName: string;
-
-  constructor(private auth: AuthService) {
+  instances = Array<{id:string, location:string}>();
+  orderByField = 'id';
+  reverseSort = false;
+  constructor(private auth: AuthService, private dashboard: DashboardService, private orderPipe: OrderPipe) {
   }
 
   ngOnInit() {
     //Get the user name and last name
     this.auth.userFirstNameObservable.subscribe(firstName => this.firstName = firstName);
     this.auth.userLastNameObservable.subscribe(lastName => this.lastName = lastName);
+    //Get all the instances
+    this.dashboard.getAllInstances().subscribe(data => {
+      for (let i = 0; i < data.length; i++) {
+        let instance = {'id':data[i].id, 'location': data[i].location};
+        this.instances.push(instance);
+      }
+    });
+    console.log(this.instances);
   }
 
   public lineChartData: Array<any> = [

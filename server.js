@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const apiScrawlers = require('./server/routes/api_scrawlers');
 const apiUsers = require('./server/routes/api_users');
+const apiMaintenance = require('./server/routes/api_maintenance');
+
 var mysql = require('mysql');
 var expressValidator = require('express-validator');
 var cookieParser = require('cookie-parser');
@@ -53,6 +55,7 @@ app.use(passport.session());
 
 app.use('/api_scrawlers', apiScrawlers);
 app.use('/api_users', apiUsers);
+app.use('/api_maintenance', apiMaintenance);
 
 /**
  * Logs in the user using the local strategy of passport. This function is called from api_users/login

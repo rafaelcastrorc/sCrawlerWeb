@@ -1,10 +1,10 @@
 /**
  * Developed by Rafael Castro
+ * Handles all request between an sCrawler instance and the server
  */
 const express = require('express');
 const router = express.Router();
 var mysql = require('mysql');
-// Todo: This should change to be depending on the user settings
 var bcrypt = require('bcrypt');
 
 var options = {
@@ -35,60 +35,25 @@ connection.connect(function (error) {
   }
 });
 
-//To get all active crawlers
-router.get('/all', function (req, res) {
-  console.log('Getting all scrawlers');
-  var query = 'SELECT * from scrawlers';
 
-  console.log(query);
-  connection.query(query, function (err, rows, fields) {
-    if (err) console.log('There was an error ' + err);
-    else {
-      //res.json(rows[0].id);
-      let queryAns = [];
-      for (var i = 0; i < rows.length; i++) {
-        let scrawler = new Scrawler(rows[i].id, rows[i].location, rows[i].missing_papers, rows[i].operation,
-          rows[i].effectiveness_rate, rows[i].download_rate, rows[i].last_updated, rows[i].started);
-        queryAns.push(scrawler);
-
-      }
-      res.json(queryAns);
-    }
-  });
-});
-
-//Gets a crawler
-router.get('/scrawler/:id', function (req, res) {
-  console.log('Getting an specific crawler');
-  let id = req.params.id;
-  var query = 'SELECT * from scrawlers WHERE id = ' + id;
-
-  console.log(query);
-  connection.query(query, function (err, rows, fields) {
-    if (err) console.log('There was an error ' + err);
-    else {
-      var scrawler = new Scrawler(rows[0].id, rows[0].location, rows[0].missing_papers, rows[0].operation,
-        rows[0].effectiveness_rate, rows[0].download_rate, rows[0].last_updated, rows[0].started);
-      res.json(scrawler);
-    }
-  });
-});
-
-//Add operation to crawler
-router.post('/operation', function (req, res) {
-  console.log('Adding command to a crawler');
-  var operation = req.body.operation;
-  var scrawlerID = req.body.id;
-  var query = 'UPDATE scrawlers SET operation = ' + operation + ' WHERE id = ' + scrawlerID;
-  console.log(query);
-  connection.query(query, function (err, rows, fields) {
-    if (err) console.log('There was an error ' + err);
-    else {
-      res.json(rows);
-    }
-  });
-});
-
+// //Todo: DELETE THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// //Gets a crawler
+// router.get('/scrawler/:id', function (req, res) {
+//   console.log('Getting an specific crawler');
+//   let id = req.params.id;
+//   var query = 'SELECT * from scrawlers WHERE id = ' + id;
+//
+//   console.log(query);
+//   connection.query(query, function (err, rows, fields) {
+//     if (err) console.log('There was an error ' + err);
+//     else {
+//       var scrawler = new Scrawler(rows[0].id, rows[0].location, rows[0].missing_papers, rows[0].operation,
+//         rows[0].effectiveness_rate, rows[0].download_rate, rows[0].last_updated, rows[0].started);
+//       res.json(scrawler);
+//     }
+//   });
+// });
+//
 
 /**
  * Checks the login credentials of a sCrawler instance. Does not create a session
@@ -97,33 +62,34 @@ router.post('/login', function (req, res, next) {
   var username = req.body.username;
   var password = req.body.password;
   console.log(username);
-  connection.query('SELECT id, password, first_name, last_name FROM users WHERE email = ?', [username], function (err, results, fields) {
-    if (err) {
-      return res.send({success: false, message: err});
-    }
-    //If there is no user with this email
-    if (results.length === 0) {
-      return res.send({success: false, message: 'There is no user with such email'});
+  connection.query('SELECT id, password, first_name, last_name FROM users WHERE email = ?', [username],
+    function (err, results, fields) {
+      if (err) {
+        return res.send({success: false, message: err});
+      }
+      //If there is no user with this email
+      if (results.length === 0) {
+        return res.send({success: false, message: 'There is no user with such email'});
 
-    } else {
-      //Get the hashed password in the db
-      const hash = results[0].password.toString();
-      console.log(hash);
-      //Verify if password matches
-      bcrypt.compare(password, hash, function (err, response) {
-        //If they match, return the user id
-        if (response === true) {
-          //Pass the id, the first and last name of the user
-          return res.send({success: true, message: 'success'});
-        }
-        else {
-          console.log('Passwords do not match');
-          return res.send({success: false, message: 'Passwords do not match'});
-        }
-      });
+      } else {
+        //Get the hashed password in the db
+        const hash = results[0].password.toString();
+        console.log(hash);
+        //Verify if password matches
+        bcrypt.compare(password, hash, function (err, response) {
+          //If they match, return the user id
+          if (response === true) {
+            //Pass the id, the first and last name of the user
+            return res.send({success: true, message: 'success'});
+          }
+          else {
+            console.log('Passwords do not match');
+            return res.send({success: false, message: 'Passwords do not match'});
+          }
+        });
 
-    }
-  })
+      }
+    })
 });
 
 /**
@@ -219,20 +185,22 @@ router.post('/unlocked_cookie', function (req, res) {
     console.log(isAuth);
     if (isAuth) {
       console.log('Getting cookie');
-      console.log('SELECT cookies FROM proxies WHERE ip = ? AND port = ? AND search_engine = ?', [ip, parseInt(port), search_engine]);
-      connection.query('SELECT cookies FROM proxies WHERE ip = ? AND port = ? AND search_engine = ?', [ip, parseInt(port), search_engine], function (err, rows, fields) {
-        let cookie = {cookie: ""};
-        if (err) console.log('There was an error ' + err);
-        else {
-          //Get the cookies for the proxy
-          for (var i = 0; i < rows.length; i++) {
-            cookie = {'cookie': rows[i].cookies};
-          }
-          console.log(cookie);
-          res.json(cookie);
+      console.log('SELECT cookies FROM proxies WHERE ip = ? AND port = ? AND search_engine = ?',
+        [ip, parseInt(port), search_engine]);
+      connection.query('SELECT cookies FROM proxies WHERE ip = ? AND port = ? AND search_engine = ?',
+        [ip, parseInt(port), search_engine], function (err, rows, fields) {
+          let cookie = {cookie: ""};
+          if (err) console.log('There was an error ' + err);
+          else {
+            //Get the cookies for the proxy
+            for (var i = 0; i < rows.length; i++) {
+              cookie = {'cookies': rows[i].cookies};
+            }
+            console.log(cookie);
+            res.json(cookie);
 
-        }
-      })
+          }
+        })
     }
     else {
       res.status(400);
@@ -259,15 +227,15 @@ router.post('/set_number_of_proxies', function (req, res) {
         [parseInt(numberOfProxies), website]);
       connection.query('UPDATE list_of_websites SET numOfProxiesFound = ? WHERE website = ? ',
         [parseInt(numberOfProxies), website], function (err, result) {
-        if (err) {
-          console.log('There was an error ' + err);
-          res.json({'success': false, 'message': err});
-        }
-        else {
-          //Send message saying the number of rows modified
-          res.json({'success': true, 'message': result.affectedRows + " record(s) updated"});
-        }
-      })
+          if (err) {
+            console.log('There was an error ' + err);
+            res.json({'success': false, 'message': err.code});
+          }
+          else {
+            //Send message saying the number of rows modified
+            res.json({'success': true, 'message': result.affectedRows + " record(s) updated"});
+          }
+        })
     }
     else {
       res.status(400);
@@ -296,7 +264,7 @@ router.post('/set_website_time', function (req, res) {
         [visited, website], function (err, result) {
           if (err) {
             console.log('There was an error ' + err);
-            res.json({'success': false, 'message': err});
+            res.json({'success': false, 'message': err.code});
           }
           else {
             //Send message saying the number of rows modified
@@ -332,7 +300,7 @@ router.post('/add_to_list_of_proxies', function (req, res) {
         [ip, port, time], function (err, result) {
           if (err) {
             console.log('There was an error ' + err);
-            res.json({'success': false, 'message': err});
+            res.json({'success': false, 'message': err.code});
           }
           else {
             //Send message saying the number of rows modified
@@ -363,13 +331,60 @@ router.post('/delete_from_list_of_proxies', function (req, res) {
       console.log('Delete proxy from list of proxies');
       console.log('DELETE FROM list_of_proxies WHERE ip = ? AND port = ?', [ip, port]);
       connection.query('DELETE FROM list_of_proxies WHERE ip = ? AND port = ?', [ip, port], function (err, result) {
+        if (err) {
+          console.log('There was an error ' + err);
+          res.json({'success': false, 'message': err.code});
+        }
+        else {
+          //Send message saying the number of rows modified
+          res.json({'success': true, 'message': result.affectedRows + " record(s) deleted"});
+        }
+      })
+    }
+    else {
+      res.status(400);
+      res.send('You are not authorized');
+    }
+
+  })
+});
+
+/**
+ * Adds a crawler instance
+ */
+router.post('/add_instance', function (req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var id = req.body.id;
+  var location = req.body.location;
+  var started = req.body.started;
+
+
+  authentication(username, password, function (isAuth) {
+    console.log(isAuth);
+    if (isAuth) {
+      console.log('Adding a new instance');
+      console.log('INSERT INTO scrawlers (id, location, started) VALUES (?, ?, ?)', [id, location, started]);
+      connection.query('INSERT INTO scrawlers (id, location, started) VALUES (?, ?, ?)', [id, location, started],
+        function (err, result) {
           if (err) {
             console.log('There was an error ' + err);
-            res.json({'success': false, 'message': err});
+            res.json({'success': false, 'message': err.code});
           }
           else {
-            //Send message saying the number of rows modified
-            res.json({'success': true, 'message': result.affectedRows + " record(s) deleted"});
+            //Associate instance to user
+            connection.query('INSERT INTO user_to_instance (user_id, instance, is_owner) VALUES ( (SELECT id FROM' +
+              ' users WHERE email = ?), ?, ?)', [username, id, true],
+              function (err, result) {
+                if (err) {
+                  console.log('There was an error ' + err);
+                  res.json({'success': false, 'message': err.code});
+                }
+                else {
+                  //Send message saying the number of rows modified
+                  res.json({'success': true, 'message': result.affectedRows + " record(s) added"});
+                }
+              });
           }
         })
     }
@@ -383,6 +398,313 @@ router.post('/delete_from_list_of_proxies', function (req, res) {
 
 
 /**
+ * Removes a crawler instance
+ */
+router.post('/remove_instance', function (req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var id = req.body.id;
+
+
+  authentication(username, password, function (isAuth) {
+    console.log(isAuth);
+    if (isAuth) {
+      console.log('Removing an instance');
+      console.log('SELECT ip, port FROM scrawler_to_proxy WHERE scrawler_id = ? ', [id]);
+      connection.query('SELECT ip, port FROM scrawler_to_proxy WHERE scrawler_id = ? ', [id], function (err, rows) {
+        if (err) {
+          console.log('There was an error getting all previously unlocked proxies' + err);
+          res.json({'success': false, 'message': err.code});
+        }
+        else {
+          console.log(rows);
+          //Decrease counter of each proxy
+          for (var i = 0; i < rows.length; i++) {
+            connection.query('UPDATE proxies SET num_of_instances = num_of_instances - 1 WHERE ip = ?  ' +
+              'AND port = ? AND num_of_instances > 0', [rows[i].ip, rows[i].port], function (err, rows) {
+              if (err) {
+                console.log('There was an error decreasing counter ' + err);
+                res.json({'success': false, 'message': err.code});
+              }
+              else {
+                console.log('Decreased counter for proxy : ' + i);
+              }
+            });
+          }
+          //Remove instance
+          connection.query('DELETE FROM scrawlers WHERE id = (?)', [id], function (err, result) {
+            if (err) {
+              console.log('There was an error removing instance counter ' + err);
+              res.json({'success': false, 'message': err.code});
+            }
+            else {
+              console.log('Instance deleted : ' + id);
+              res.json({'success': true, 'message': result.affectedRows + " record(s) modified"});
+            }
+          });
+        }
+      })
+    }
+    else {
+      res.status(400);
+      res.send('You are not authorized');
+    }
+
+  })
+});
+
+
+/**
+ * Adds a proxy to an instance
+ */
+router.post('/add_proxy_to_instance', function (req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var id = req.body.id;
+  var ip = req.body.ip;
+  var port = parseInt(req.body.port);
+
+  authentication(username, password, function (isAuth) {
+    console.log(isAuth);
+    if (isAuth) {
+      console.log('Adding a new instance');
+      console.log('INSERT INTO scrawler_to_proxy (scrawler_id, ip, port) VALUES (?, ?, ?)', [id, ip, port]);
+      connection.query('INSERT INTO scrawler_to_proxy (scrawler_id, ip, port) VALUES (?, ?, ?)', [id, ip, port],
+        function (err, result) {
+          if (err) {
+            console.log('There was an error ' + err);
+            res.json({'success': false, 'message': err.code});
+          }
+          else {
+            //Increase the count of crawlers using this proxy
+            connection.query('UPDATE proxies SET num_of_instances = num_of_instances + 1, unlocked = TRUE WHERE ip = ?  ' +
+              'AND port = ?', [ip, port], function (err, result) {
+              if (err) {
+                console.log('There was an error ' + err);
+                res.json({'success': false, 'message': err.code});
+              } else {
+                console.log('UPDATE proxies SET num_of_instances = num_of_instances + 1, unlocked = TRUE WHERE ip = ?  ' +
+                  'AND port = ?', [ip, port]);
+                //Send message saying the number of rows modified
+                res.json({'success': true, 'message': result.affectedRows + " record(s) modified"});
+              }
+            })
+          }
+        })
+    }
+    else {
+      res.status(400);
+      res.send('You are not authorized');
+    }
+
+  })
+});
+
+
+/**
+ * Adds an unlocked proxy into the db
+ */
+router.post('/add_unlocked_proxy', function (req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var ip = req.body.ip;
+  var port = parseInt(req.body.port);
+  var cookies = req.body.cookies;
+  var search_engine = req.body.search_engine;
+
+
+  authentication(username, password, function (isAuth) {
+    console.log(isAuth);
+    if (isAuth) {
+      console.log('Adding a new unlocked proxy');
+      console.log('INSERT INTO proxies (ip, port, unlocked, cookies, search_engine) VALUES (?, ?, TRUE, ?, ?)',
+        [ip, port, cookies, search_engine]);
+      connection.query('INSERT INTO proxies (ip, port, unlocked, cookies, search_engine) VALUES (?, ?, TRUE, ?, ?)',
+        [ip, port, cookies, search_engine], function (err, result) {
+          if (err) {
+            //If this happens, record already exist so we update it instead
+            if (err.code === ('ER_DUP_ENTRY')) {
+              //Increase the count of crawlers using this proxy
+              connection.query('UPDATE proxies SET cookies = ?, search_engine = ?, unlocked = TRUE WHERE ip = ? AND ' +
+                'port = ?', [cookies, search_engine, ip, port], function (err, result) {
+                if (err) {
+                  console.log('There was an error ' + err);
+                  res.json({'success': false, 'message': err.code});
+                } else {
+                  res.json({'success': true, 'message': result.affectedRows + " record(s) modified"});
+                }
+              });
+            } else {
+              console.log('There was an error ' + err);
+              res.json({'success': false, 'message': err.code});
+            }
+          }
+          else {
+            res.json({'success': true, 'message': result.affectedRows + " record(s) modified"});
+          }
+        })
+    }
+    else {
+      res.status(400);
+      res.send('You are not authorized');
+    }
+
+  })
+});
+
+
+/**
+ * Adds an locked proxy into the db
+ */
+router.post('/add_locked_proxy', function (req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var ip = req.body.ip;
+  var port = parseInt(req.body.port);
+
+
+  authentication(username, password, function (isAuth) {
+    console.log(isAuth);
+    if (isAuth) {
+      console.log('Adding a new locked proxy');
+      console.log('UPDATE proxies SET cookies = "", unlocked = FALSE, num_of_instances = 0 WHERE ip = ?  AND port = ?',
+        [ip, port]);
+      connection.query('UPDATE proxies SET cookies = "", unlocked = FALSE, num_of_instances = 0 WHERE ip = ?  AND port = ?',
+        [ip, port], function (err, result) {
+          if (err) {
+            console.log('There was an error ' + err);
+            res.json({'success': false, 'message': err.code});
+          }
+          else {
+            //Remove it from the instance using it
+            connection.query('DELETE FROM scrawler_to_proxy WHERE ip = ? AND port = ? ', [ip, port], function (err, result) {
+              if (err) {
+                console.log('There was an error ' + err);
+                res.json({'success': false, 'message': err.code});
+              } else {
+                res.json({'success': true, 'message': result.affectedRows + " record(s) modified"});
+              }
+            });
+          }
+        })
+    }
+    else {
+      res.status(400);
+      res.send('You are not authorized');
+    }
+
+  })
+});
+
+/**
+ * Adds an error into the erros table
+ */
+router.post('/add_error', function (req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var scrawler_id = req.body.scrawler_id;
+  var location = req.body.location;
+  var time = req.body.time;
+  var error = req.body.error;
+
+  authentication(username, password, function (isAuth) {
+    console.log(isAuth);
+    if (isAuth) {
+      console.log('Adding a new error');
+      console.log('INSERT INTO errors (scrawler_id, location, error, time) VALUES(?,?,?,?)', [scrawler_id, location, error, time]);
+      connection.query('INSERT INTO errors (scrawler_id, location, error, time) VALUES(?,?,?,?)', [scrawler_id, location, error, time],
+        function (err, result) {
+          if (err) {
+            console.log('There was an error ' + err);
+            res.json({'success': false, 'message': err.code});
+          }
+          else {
+            //Send message saying the number of rows modified
+            res.json({'success': true, 'message': result.affectedRows + " record(s) added"});
+          }
+        })
+    }
+    else {
+      res.status(400);
+      res.send('You are not authorized');
+    }
+
+  })
+});
+
+/**
+ * Adds a failure to load to a proxy
+ */
+router.post('/add_failure', function (req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var ip = req.body.ip;
+  var port = parseInt(req.body.port);
+  authentication(username, password, function (isAuth) {
+    console.log(isAuth);
+    if (isAuth) {
+      console.log('Adding a new failure to load');
+      console.log('UPDATE proxies SET failed_to_load = failed_to_load + 1 WHERE ip = ?  AND port = ?', [ip, port]);
+      connection.query('UPDATE proxies SET failed_to_load = failed_to_load + 1 WHERE ip = ?  AND port = ?', [ip, port],
+        function (err, result) {
+          if (err) {
+            console.log('There was an error ' + err);
+            res.json({'success': false, 'message': err.code});
+          }
+          else {
+            //Send message saying the number of rows modified
+            res.json({'success': true, 'message': result.affectedRows + " record(s) added"});
+          }
+        })
+    }
+    else {
+      res.status(400);
+      res.send('You are not authorized');
+    }
+
+  })
+});
+
+/**
+ * Adds the current download rate of an instance
+ */
+router.post('/add_download_rate', function (req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var id = req.body.id;
+  var last_updated = req.body.last_updated;
+  var download_rate = parseFloat(req.body.download_rate);
+  var effectiveness_rate = parseFloat(req.body.effectiveness_rate);
+  var missing_papers = parseInt(req.body.missing_papers);
+
+
+  authentication(username, password, function (isAuth) {
+    console.log(isAuth);
+    if (isAuth) {
+      console.log('Adding download rate');
+      console.log('UPDATE scrawlers SET download_rate = ?, last_updated = ?, effectiveness_rate = ?, missing_papers =? ' +
+        'WHERE id = ?', [download_rate, last_updated, effectiveness_rate, missing_papers, id]);
+      connection.query('UPDATE scrawlers SET download_rate = ?, last_updated = ?, effectiveness_rate = ?, missing_papers =? ' +
+        'WHERE id = ?', [download_rate, last_updated, effectiveness_rate, missing_papers, id],
+        function (err, result) {
+          if (err) {
+            console.log('There was an error ' + err);
+            res.json({'success': false, 'message': err.code});
+          }
+          else {
+            //Send message saying the number of rows modified
+            res.json({'success': true, 'message': result.affectedRows + " record(s) added"});
+          }
+        })
+    }
+    else {
+      res.status(400);
+      res.send('You are not authorized');
+    }
+
+  })
+});
+/**
  * Checks if proxy is not locked
  */
 router.get('/is_unlocked/:ip/:port', function (req, res) {
@@ -390,19 +712,24 @@ router.get('/is_unlocked/:ip/:port', function (req, res) {
   var port = parseInt(req.params.port);
   console.log('Checking if proxy is unlocked');
   console.log('SELECT cookies FROM proxies WHERE ip = ? AND port = ?', [ip, port]);
-  connection.query('SELECT unlocked, num_of_instances FROM proxies WHERE ip=? AND port=?', [ip, port], function (err, rows, fields) {
-    if (err) console.log('There was an error ' + err);
-    else {
-      //If result is empty
-      if (rows.length === 0) {
-        res.json();
-      }
+  connection.query('SELECT unlocked, num_of_instances FROM proxies WHERE ip=? AND port=?', [ip, port],
+    function (err, rows, fields) {
+      if (err) console.log('There was an error ' + err);
       else {
-        //Send object
-        res.json({'unlocked': rows[0].unlocked, 'num_of_instances': rows[0].num_of_instances});
+        //If result is empty
+        if (rows.length === 0) {
+          res.json({'unlocked': null, 'num_of_instances': null});
+        }
+        else {
+          //Send object
+          var ans = false;
+          if (rows[0].unlocked  === 1) {
+            ans = true;
+          }
+          res.json({'unlocked': ans, 'num_of_instances': rows[0].num_of_instances});
+        }
       }
-    }
-  });
+    });
 });
 
 
@@ -415,19 +742,20 @@ router.get('/is_using_proxy/:ip/:port', function (req, res) {
 
   console.log('Checking if instance is already using proxy');
   console.log('SELECT scrawler_id FROM scrawler_to_proxy WHERE ip=? AND port=?', [ip, port]);
-  connection.query('SELECT scrawler_id FROM scrawler_to_proxy WHERE ip=? AND port=?', [ip, port], function (err, rows, fields) {
-    if (err) console.log('There was an error ' + err);
-    else {
-      //If result is empty
-      if (rows.length === 0) {
-        res.json();
-      }
+  connection.query('SELECT scrawler_id FROM scrawler_to_proxy WHERE ip=? AND port=?', [ip, port],
+    function (err, rows, fields) {
+      if (err) console.log('There was an error ' + err);
       else {
-        //Send object
-        res.json({'scrawler_id': rows[0].scrawler_id});
+        //If result is empty
+        if (rows.length === 0) {
+          res.json({'scrawler_id': null});
+        }
+        else {
+          //Send object
+          res.json({'scrawler_id': rows[0].scrawler_id});
+        }
       }
-    }
-  });
+    });
 });
 
 /**
@@ -435,12 +763,12 @@ router.get('/is_using_proxy/:ip/:port', function (req, res) {
  */
 router.get('/list_of_websites', function (req, res) {
   console.log('Retrieving all the websites');
-  connection.query('SELECT website, visited FROM list_of_websites ', function (err) {
+  connection.query('SELECT website, visited FROM list_of_websites ', function (err, rows) {
     if (err) console.log('There was an error ' + err);
     else {
       //If result is empty
       if (rows.length === 0) {
-        res.json();
+        res.json({'website': null, 'visited': null});
       }
       else {
         let queryAns = [];
@@ -478,5 +806,50 @@ router.get('/list_of_proxies', function (req, res) {
   });
 });
 
+
+/**
+ * Gets all the proxy compiling websites
+ */
+router.get('/failure_to_load/:ip/:port', function (req, res) {
+  var ip = req.params.ip;
+  var port = parseInt(req.params.port);
+
+  console.log('Retrieving the number of times a proxy has failed to load');
+  connection.query('SELECT failed_to_load  FROM proxies  WHERE ip = ?  AND port = ?', [ip, port], function (err, rows) {
+    if (err) console.log('There was an error ' + err);
+    else {
+      //If result is empty
+      if (rows.length === 0) {
+        res.json({'failed_to_load': null});
+      }
+      else {
+        //Return the number of times it failed to load
+        res.json({'failed_to_load': rows[0].failed_to_load});
+      }
+    }
+  });
+});
+
+/**
+ * Gets the operation an instance needs to perform
+ */
+router.get('/operation/:id', function (req, res) {
+  var id = req.params.id;
+
+  console.log('Retrieving the operation this instance needs to perform');
+  connection.query('SELECT operation FROM scrawlers WHERE id = ?', [id], function (err, rows) {
+    if (err) console.log('There was an error ' + err);
+    else {
+      //If result is empty
+      if (rows.length === 0) {
+        res.json({'operation': null});
+      }
+      else {
+        //Return the number of times it failed to load
+        res.json({'operation': rows[0].operation});
+      }
+    }
+  });
+});
 
 module.exports = router;
