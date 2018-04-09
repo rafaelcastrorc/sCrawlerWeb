@@ -3,8 +3,8 @@ body {
   font-family: 'Montserrat', sans-serif;
   min-height: calc(100vh - 70px) !important;
   height: calc(100vh - 70px) !important;
-  background: #6B6E70;
-  color: #ffffff;
+  background: #ffffff !important;
+  color: #000000;
 }
 /*
  * Utilities
