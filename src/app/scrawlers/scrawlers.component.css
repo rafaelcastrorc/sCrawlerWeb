@@ -1,7 +1,7 @@
 body {
   font-size: .875rem;
   font-family: 'Montserrat', sans-serif;
-  overflow: auto;
+  overflow-x: hidden;
   min-height: calc(100vh - 70px) !important;
   height: calc(100vh - 70px) !important;
 
@@ -35,7 +35,6 @@ body {
   height: calc(100vh - 70px);
   padding-top: .5rem;
   overflow-x: hidden;
-  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
 
 .sidebar .nav-link {
