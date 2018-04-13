@@ -2,18 +2,14 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Subject} from "rxjs/Subject";
 import {Proxy} from "../models/proxy";
-
-interface Instance {
-  id: string;
-  location: string;
-}
+import {Scrawler} from "../models/scrawler";
 
 interface NumberOfInstances {
   counter: number; l
 }
 
 
-interface InstancesArray extends Array<Instance>{}
+interface InstancesArray extends Array<Scrawler>{}
 interface ProxiesArray extends Array<Proxy>{}
 
 /**

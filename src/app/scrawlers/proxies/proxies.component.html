@@ -5,17 +5,17 @@
     Currently Available Proxies
   </div>
   <div class="card-body">
-    <mat-table #table [dataSource]="dataSource">
+    <mat-table #table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="ip">
-        <mat-header-cell *matHeaderCellDef> IP</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> IP</mat-header-cell>
         <mat-cell *matCellDef="let proxy"> {{proxy.ip}}</mat-cell>
       </ng-container>
       <ng-container matColumnDef="port">
-        <mat-header-cell *matHeaderCellDef> Port</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Port</mat-header-cell>
         <mat-cell *matCellDef="let proxy"> {{proxy.port}}</mat-cell>
       </ng-container>
       <ng-container matColumnDef="updated">
-        <mat-header-cell *matHeaderCellDef> Found</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Found</mat-header-cell>
         <mat-cell *matCellDef="let proxy"> {{proxy.updated}}</mat-cell>
       </ng-container>
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

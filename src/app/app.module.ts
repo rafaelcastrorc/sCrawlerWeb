@@ -21,7 +21,7 @@ import { OverviewComponent } from './scrawlers/overview/overview.component';
 import {DashboardService} from "./services/dashboard.service";
 import { OrderModule } from 'ngx-order-pipe';
 import { ProxiesComponent } from './scrawlers/proxies/proxies.component';
-import {MatTableModule, MatPaginatorModule} from "@angular/material";
+import {MatTableModule, MatPaginatorModule, MatSortModule} from "@angular/material";
 import {CdkTableModule} from '@angular/cdk/table';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { InstancesComponent } from './scrawlers/instances/instances.component';
@@ -55,7 +55,8 @@ import { ManageComponent } from './scrawlers/manage/manage.component';
     MatTableModule,
     CdkTableModule,
     MatPaginatorModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatSortModule
   ],
   providers: [AuthService, AuthGuard, NegAuthGuard, DashboardService],
   bootstrap: [AppComponent],

@@ -15,7 +15,7 @@ export class OverviewComponent implements OnInit {
   lastName: string;
   instances = Array<{id:string, location:string}>();
   proxies = Array<{ip:string, port:number, updated:string}>();
-  numberOfInstances: number;
+  numberOfInstances = 0;
 
 
   constructor(private auth: AuthService, private dashboard: DashboardService, private orderPipe: OrderPipe) {

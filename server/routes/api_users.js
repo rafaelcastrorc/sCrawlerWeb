@@ -12,6 +12,7 @@ const saltRounds = 10;
 var expressValidator = require('express-validator');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const Scrawler = require('../models/scrawler');
 
 var options = {
   host: 'sql9.freemysqlhosting.net',
@@ -210,7 +211,7 @@ router.post('/perform_operation', function (req, res) {
  */
 router.get('/instances', function (req, res) {
   console.log('Getting all scrawlers that is user has');
-  var query = 'SELECT id, location FROM scrawlers S JOIN user_to_instance U ON U.instance = S.id WHERE U.user_id = ?';
+  var query = 'SELECT * FROM scrawlers S JOIN user_to_instance U ON U.instance = S.id WHERE U.user_id = ?';
 
   console.log(query);
   connection.query(query, [req.user], function (err, rows, fields) {
@@ -218,7 +219,8 @@ router.get('/instances', function (req, res) {
     else {
       let queryAns = [];
       for (var i = 0; i < rows.length; i++) {
-        let scrawler = ({'id': rows[i].id, 'location': rows[i].location});
+        var scrawler = new Scrawler(rows[0].id, rows[0].location, rows[0].missing_papers, rows[0].operation,
+         rows[0].effectiveness_rate, rows[0].download_rate, rows[0].last_updated, rows[0].started);
         queryAns.push(scrawler);
       }
       console.log(queryAns);

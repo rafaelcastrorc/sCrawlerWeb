@@ -1,4 +1,4 @@
-export class Scrawler {
+export interface Scrawler {
   id: any;
   location: any;
   missing_papers: any;
@@ -8,3 +8,4 @@ export class Scrawler {
   last_updated: any;
   started: any;
 }
+

@@ -18,7 +18,7 @@ body {
 }
 
 .big-icons {
-  width: 100px ;
+  width: 70px ;
 }
 
 
@@ -38,11 +38,17 @@ body {
   .card-columns {
     column-count: 1;
   }
+  .display-3 {
+    font-size: 3rem;
+  }
 }
 
 @media (min-width: 768px) {
   .card-columns {
     column-count: 2;
+  }
+  .display-3 {
+    font-size: 3rem;
   }
 }
 

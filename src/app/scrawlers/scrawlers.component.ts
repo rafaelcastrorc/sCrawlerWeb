@@ -10,7 +10,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./scrawlers.component.css'],
 })
 export class ScrawlersComponent implements OnInit {
-  instances = Array<{id:string, location:string}>();
+  instances = Array<Scrawler>();
   proxies = Array<{ip:string, port:number, updated:string}>();
   numberOfInstances: number;
 
@@ -43,8 +43,7 @@ export class ScrawlersComponent implements OnInit {
     //Get all the user instances
     this.dashboard.getAllInstances().subscribe(data => {
       for (let i = 0; i < data.length; i++) {
-        let instance = {'id':data[i].id, 'location': data[i].location};
-        this.instances.push(instance);
+        this.instances.push(data[i]);
       }
       this.dashboard.setInstances(this.instances);
 

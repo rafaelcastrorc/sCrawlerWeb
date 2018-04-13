@@ -1,0 +1,43 @@
+/*
+  This will hide the focus indicator if the element receives focus via the mouse,
+  but it will still show up on keyboard focus.
+*/
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none !important;
+}
+
+.icons {
+  vertical-align: text-bottom;
+}
+
+body {
+  font-size: .875rem !important;
+  color: #000000;
+  font-family: 'Montserrat', sans-serif !important;
+
+}
+
+.mat-table {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.mat-header-cell {
+  font-size: 1rem !important;
+}
+
+.mat-cell, .mat-paginator, .mat-paginator-page-size .mat-select-trigger  {
+  font-size: .875rem !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.card-header {
+  font-size: 1.2rem;
+}
+
+
+.mat-cell, .mat-header-cell {
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+
