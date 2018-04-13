@@ -1,0 +1,35 @@
+<body>
+<div class="card mb-3">
+  <div class="card-header">
+    <i-database class="icons"></i-database>
+    Currently Available Proxies
+  </div>
+  <div class="card-body">
+    <mat-table #table [dataSource]="dataSource">
+      <ng-container matColumnDef="ip">
+        <mat-header-cell *matHeaderCellDef> IP</mat-header-cell>
+        <mat-cell *matCellDef="let proxy"> {{proxy.ip}}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="port">
+        <mat-header-cell *matHeaderCellDef> Port</mat-header-cell>
+        <mat-cell *matCellDef="let proxy"> {{proxy.port}}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="updated">
+        <mat-header-cell *matHeaderCellDef> Found</mat-header-cell>
+        <mat-cell *matCellDef="let proxy"> {{proxy.updated}}</mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator #paginator
+                   [pageSize]="100"
+                   [pageSizeOptions]="[50, 100, 150]"
+                   [showFirstLastButtons]="true"
+                   class="green">
+     </mat-paginator>
+
+  </div>
+</div>
+<div class="card-footer small text-muted">Updated {{date}}</div>
+</body>
+<script src="../../../../node_modules/focus-visible/dist/focus-visible.min.js"></script>

@@ -29,8 +29,8 @@ export class AuthService {
   private loggedInStatus = false;
   private userFirstNameSource = new BehaviorSubject<string>("");
   private userLastNameSource = new BehaviorSubject<string>("");
-  private _userFirstNameObservable = this.userFirstNameSource.asObservable();
-  private _userLastNameObservable = this.userLastNameSource.asObservable();
+  userFirstNameObservable$ = this.userFirstNameSource.asObservable();
+  userLastNameObservable$ = this.userLastNameSource.asObservable();
 
   constructor(private http: HttpClient) {
   }
@@ -41,14 +41,6 @@ export class AuthService {
 
   get observableStatus(): EventEmitter<any> {
     return this._observableStatus;
-  }
-
-  get userFirstNameObservable(): Observable<string> {
-    return this._userFirstNameObservable;
-  }
-
-  get userLastNameObservable(): Observable<string> {
-    return this._userLastNameObservable;
   }
 
   setUserName(firstName: string, lastName: string) {

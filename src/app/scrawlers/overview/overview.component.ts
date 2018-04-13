@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from "../../auth.service";
-import {DashboardService} from "../../dashboard.service";
+import {AuthService} from "../../services/auth.service";
+import {DashboardService} from "../../services/dashboard.service";
 import {OrderPipe} from 'ngx-order-pipe';
 
 
@@ -10,26 +10,32 @@ import {OrderPipe} from 'ngx-order-pipe';
   styleUrls: ['./overview.component.css'],
 })
 export class OverviewComponent implements OnInit {
+  name: string;
   firstName: string;
   lastName: string;
   instances = Array<{id:string, location:string}>();
-  orderByField = 'id';
-  reverseSort = false;
+  proxies = Array<{ip:string, port:number, updated:string}>();
+  numberOfInstances: number;
+
+
   constructor(private auth: AuthService, private dashboard: DashboardService, private orderPipe: OrderPipe) {
+    dashboard.instances$.subscribe(instances =>
+      this.instances = instances
+    );
+    dashboard.proxies$.subscribe(proxies =>
+      this.proxies = proxies
+    );
+    dashboard.instancesGlobally$.subscribe(number =>
+      this.numberOfInstances = number
+    );
+    //Get the user name and last name
+    this.auth.userFirstNameObservable$.subscribe(firstName => this.firstName = firstName);
+    this.auth.userLastNameObservable$.subscribe(lastName => this.lastName = lastName);
+    this.name = this.firstName + this.lastName;
+
   }
 
   ngOnInit() {
-    //Get the user name and last name
-    this.auth.userFirstNameObservable.subscribe(firstName => this.firstName = firstName);
-    this.auth.userLastNameObservable.subscribe(lastName => this.lastName = lastName);
-    //Get all the instances
-    this.dashboard.getAllInstances().subscribe(data => {
-      for (let i = 0; i < data.length; i++) {
-        let instance = {'id':data[i].id, 'location': data[i].location};
-        this.instances.push(instance);
-      }
-    });
-    console.log(this.instances);
   }
 
   public lineChartData: Array<any> = [

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from "./auth.service";
+import {AuthService} from "./services/auth.service";
 import {Router} from "@angular/router";
 
 // import {Spinkit} from 'ng-http-loader/spinkits';
@@ -19,6 +19,9 @@ export class AppComponent implements OnInit {
 
 
   constructor(private auth: AuthService, private router: Router) {
+    this.router.routeReuseStrategy.shouldReuseRoute = function() {
+      return false;
+    };
   }
 
   ngOnInit() {
@@ -34,13 +37,6 @@ export class AppComponent implements OnInit {
     this.auth.observableStatus.subscribe(status => this.userLoggedIn = status);
   }
 
-  /**
-   * Listes to change in status by children component
-   * @param {boolean} val
-   */
-  onLoginStatus(val: boolean) {
-    this.userLoggedIn = val;
-  }
 
   /**
    * Collapses nav bar

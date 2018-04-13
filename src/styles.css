@@ -1,2 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+.mat-select:focus:not(.mat-select-disabled).mat-primary .mat-select-arrow, .mat-select-underline, .mat-select-trigger {
+  color: #86C232;
+}
+
+/* to change selected item color in the select list */
+.mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+  color: #86C232;
+}
+
+.mat-form-field-ripple {
+  color: #86C232 !important;
+}
+
+.mat-form-field.mat-focused.mat-primary .mat-select-arrow {
+  color: #86C232 !important;
+}
+
+.mat-paginator, .mat-paginator-page-size .mat-select-trigger {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 0.85rem;
+}
+
+.mat-focused .mat-form-field-label {
+  color: #86C232 !important;
+}
+
+.mat-focused .mat-form-field-underline .mat-form-field-ripple {
+  background: #86C232 !important;
+}
+
+/*Remove focus from button*/
+button {
+  outline: none !important;
+}
+

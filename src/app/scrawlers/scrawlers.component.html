@@ -5,19 +5,19 @@
       <div class="sidebar-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" href="#">
+            <a class="nav-link active" routerLink="overview">
               <i-home class="icons"></i-home>
               Overview <span class="sr-only">(current)</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" routerLink="manage">
               <i-monitor class="icons"></i-monitor>
               Control instances
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" routerLink="instances">
               <span data-feather="shopping-cart"></span>
               Detailed description
             </a>
@@ -29,8 +29,8 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="bar-chart-2"></span>
+            <a class="nav-link" routerLink="proxies">
+              <i-database class="icons"></i-database>
               Proxies Available
             </a>
           </li>
@@ -78,7 +78,7 @@
     </nav>
 
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-      <app-overview></app-overview>
+      <router-outlet></router-outlet>
     </main>
   </div>
 </div>

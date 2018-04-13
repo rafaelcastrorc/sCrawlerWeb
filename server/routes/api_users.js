@@ -205,24 +205,69 @@ router.post('/perform_operation', function (req, res) {
 });
 
 
-//To get all active crawlers
+/**
+ * Get all instances that the user owns
+ */
 router.get('/instances', function (req, res) {
   console.log('Getting all scrawlers that is user has');
-  var query = 'SELECT id, location FROM scrawlers S JOIN user_to_instance U ON ? = U.user_id';
+  var query = 'SELECT id, location FROM scrawlers S JOIN user_to_instance U ON U.instance = S.id WHERE U.user_id = ?';
 
   console.log(query);
   connection.query(query, [req.user], function (err, rows, fields) {
     if (err) console.log('There was an error ' + err);
     else {
-      //res.json(rows[0].id);
       let queryAns = [];
       for (var i = 0; i < rows.length; i++) {
         let scrawler = ({'id': rows[i].id, 'location': rows[i].location});
         queryAns.push(scrawler);
       }
+      console.log(queryAns);
       res.json(queryAns);
     }
   });
 });
 
+
+/**
+ * Get a counter of the number of instances available globally
+ */
+router.get('/all_instances', function (req, res) {
+  console.log('Getting all scrawlers globally');
+  var query = 'SELECT COUNT(*) AS counter FROM scrawlers';
+
+  console.log(query);
+  connection.query(query, function (err, rows, fields) {
+    if (err) console.log('There was an error ' + err);
+    else {
+      res.json({'count': rows[0].counter});
+    }
+  });
+});
+
+
+/**
+ * Gets all the proxies available
+ */
+router.get('/proxies', function (req, res) {
+  console.log('Getting all proxies');
+  var query = 'SELECT * FROM list_of_proxies';
+
+  console.log(query);
+  connection.query(query, function (err, rows, fields) {
+    if (err) console.log('There was an error ' + err);
+    else {
+      let queryAns = [];
+      for (var i = 0; i < rows.length; i++) {
+        //Convert the date from timestamp to local time
+        var newDate = new Date();
+        newDate.setTime(rows[i].time - (newDate.getTimezoneOffset() * 60 * 1000));
+        let dateString = newDate.toUTCString();
+
+        let proxy = ({'ip': rows[i].ip, 'port': rows[i].port, 'updated': dateString});
+        queryAns.push(proxy);
+      }
+      res.json(queryAns);
+    }
+  });
+});
 module.exports = router;
