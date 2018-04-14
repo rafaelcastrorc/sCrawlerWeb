@@ -467,7 +467,7 @@ router.post('/add_proxy_to_instance', function (req, res) {
   authentication(username, password, function (isAuth) {
     console.log(isAuth);
     if (isAuth) {
-      console.log('Adding a new instance');
+      console.log('Adding a new proxy to an instance');
       console.log('INSERT INTO scrawler_to_proxy (scrawler_id, ip, port) VALUES (?, ?, ?)', [id, ip, port]);
       connection.query('INSERT INTO scrawler_to_proxy (scrawler_id, ip, port) VALUES (?, ?, ?)', [id, ip, port],
         function (err, result) {
@@ -517,8 +517,9 @@ router.post('/add_unlocked_proxy', function (req, res) {
     console.log(isAuth);
     if (isAuth) {
       console.log('Adding a new unlocked proxy');
-      console.log('INSERT INTO proxies (ip, port, unlocked, cookies, search_engine) VALUES (?, ?, TRUE, ?, ?)',
-        [ip, port, cookies, search_engine]);
+      console.log('INSERT INTO proxies (ip, port, unlocked, cookies, search_engine, failed_to_load) ' +
+        'VALUES (?, ?, ?, ?, ?, ?)',
+        [ip, port, true, cookies, search_engine, 0]);
       connection.query('INSERT INTO proxies (ip, port, unlocked, cookies, search_engine) VALUES (?, ?, TRUE, ?, ?)',
         [ip, port, cookies, search_engine], function (err, result) {
           if (err) {
@@ -531,6 +532,7 @@ router.post('/add_unlocked_proxy', function (req, res) {
                   console.log('There was an error ' + err);
                   res.json({'success': false, 'message': err.code});
                 } else {
+                  console.log('Duplicate found, so just updating values');
                   res.json({'success': true, 'message': result.affectedRows + " record(s) modified"});
                 }
               });
