@@ -25,7 +25,7 @@ body {
   font-size: 1rem !important;
 }
 
-.mat-cell, .mat-paginator, .mat-paginator-page-size .mat-select-trigger  {
+.mat-cell, .mat-paginator, .mat-paginator-page-size .mat-select-trigger {
   font-size: .875rem !important;
   font-family: 'Montserrat', sans-serif !important;
 }
@@ -34,10 +34,80 @@ body {
   font-size: 1.2rem;
 }
 
-
 .mat-cell, .mat-header-cell {
   overflow: hidden;
   word-wrap: break-word;
 }
 
+.btn-outline-light,
+.btn-outline-light:hover,
+.btn-outline-light:focus,
+.btn-outline-light:active,
+.btn-outline-light:not(:disabled):not(.disabled).active, .btn-outline-light:not(:disabled):not(.disabled):active, .show > .btn-outline-light.dropdown-toggle {
+  color: #ffffff;
+  background: transparent;
+  font-size: 0.875rem;
+}
 
+.dropdown-item {
+  font-size: 0.875rem;
+}
+
+/* Custom default button */
+.dropdown-item:focus {
+  color: #86C232;
+}
+
+/*On click*/
+.dropdown-item:active {
+  background-color: #86C232 !important;
+  color: #ffffff;
+
+}
+
+/**
+Background color for the cards depending on the download rate
+ */
+.positive {
+  background-color: green !important;
+}
+
+.negative {
+  background-color: red !important;
+}
+
+/*
+Add space between span elements
+ */
+span:before {
+  content: " ";
+  display: inline-block;
+  width: 12px;
+}
+
+
+@media (min-width: 576px) {
+  .card-columns {
+    column-count: 1;
+  }
+
+  .display-3 {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .card-columns {
+    column-count: 2;
+  }
+
+  .display-3 {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .card-columns {
+    column-count: 2;
+  }
+}

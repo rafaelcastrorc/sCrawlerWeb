@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../services/auth.service";
 import {DashboardService} from "../../services/dashboard.service";
 import {OrderPipe} from 'ngx-order-pipe';
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -16,22 +17,30 @@ export class OverviewComponent implements OnInit {
   instances = Array<{id:string, location:string}>();
   proxies = Array<{ip:string, port:number, updated:string}>();
   numberOfInstances = 0;
+  date;
 
 
-  constructor(private auth: AuthService, private dashboard: DashboardService, private orderPipe: OrderPipe) {
-    dashboard.instances$.subscribe(instances =>
+  constructor(private router: Router, private auth: AuthService, private dashboard: DashboardService, private orderPipe: OrderPipe) {
+    dashboard.myInstances$.subscribe(instances =>
       this.instances = instances
     );
     dashboard.proxies$.subscribe(proxies =>
       this.proxies = proxies
     );
-    dashboard.instancesGlobally$.subscribe(number =>
-      this.numberOfInstances = number
-    );
+    dashboard.instancesGlobally$.subscribe(number => {
+      this.numberOfInstances = number;
+    });
+
+    //Get the date info was updated
+    dashboard.date$.subscribe(date => {
+      this.date = date;
+    });
+
     //Get the user name and last name
     this.auth.userFirstNameObservable$.subscribe(firstName => this.firstName = firstName);
     this.auth.userLastNameObservable$.subscribe(lastName => this.lastName = lastName);
     this.name = this.firstName + this.lastName;
+
 
   }
 

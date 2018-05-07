@@ -5,12 +5,23 @@ import {Proxy} from "../models/proxy";
 import {Scrawler} from "../models/scrawler";
 
 interface NumberOfInstances {
-  counter: number; l
+  count: number;
 }
 
-
+interface UpdatedDate{
+  date: string;
+}
 interface InstancesArray extends Array<Scrawler>{}
 interface ProxiesArray extends Array<Proxy>{}
+
+
+/**
+ * Interface used for incoming messages after the user performs an operation
+ */
+interface OperationMessage {
+  message: string
+  success: boolean
+}
 
 /**
  * Handles all request to the server from the user dashboard
@@ -20,63 +31,39 @@ export class DashboardService {
 
   constructor(private http: HttpClient) { }
 
-  // /**
-  //  * Logs the user in
-  //  * @param username
-  //  * @param {string} password
-  //  * @returns {Subscription}
-  //  */
-  // loginUser(username: string, password: string) {
-  //   return this.http.post<IncomingMessage>('/api_users/login', {
-  //     username,
-  //     password
-  //   })
-  // }
-  //
-  //
-  // /**
-  //  * Registers the user
-  //  * @param {string} firstname
-  //  * @param {string} lastname
-  //  * @param {string} email
-  //  * @param {string} password
-  //  * @returns {Observable<IncomingMessage>}
-  //  */
-  // registerUser(firstname: string, lastname: string, email: string, password: string) {
-  //   return this.http.post<IncomingMessage>('/api_users/register', {
-  //     firstname,
-  //     lastname,
-  //     email,
-  //     password
-  //   })
-  // }
-
   // Observable string sources
   private proxiesSource = new Subject<ProxiesArray>();
-  private instancesSource= new Subject<InstancesArray>();
+  private myInstancesSource= new Subject<InstancesArray>();
   private instancesGloballySource= new Subject<number>();
+  private updateDateSource= new Subject<string>();
+
 
   // Observable string streams
   proxies$ = this.proxiesSource.asObservable();
-  instances$ = this.instancesSource.asObservable();
+  myInstances$ = this.myInstancesSource.asObservable();
   instancesGlobally$ = this.instancesGloballySource.asObservable();
+  date$ = this.updateDateSource.asObservable();
 
 
   setProxies(proxies: ProxiesArray) {
     this.proxiesSource.next(proxies);
   }
 
-  setInstances(instances: InstancesArray) {
-    this.instancesSource.next(instances);
+  setMyInstances(instances: InstancesArray) {
+    this.myInstancesSource.next(instances);
   }
   setNumberOfInstancesGlobally(number: number) {
     this.instancesGloballySource.next(number);
   }
 
+  setUpdateDate(date: string) {
+    this.updateDateSource.next(date);
+
+  }
   /**
    * Retrieves all the instances that the user has
    */
-  getAllInstances() {
+  getMyInstances() {
     return this.http.get<InstancesArray>('/api_users/instances');
   }
 
@@ -95,5 +82,23 @@ export class DashboardService {
   }
 
 
+  /**
+   * Retrieves all the proxies currently available
+   */
+  getUpdatedDate() {
+    return this.http.get<UpdatedDate>('/api_users/date');
+  }
 
+
+  /**
+   * Performs an operation in instance
+   * @param id
+   * @param operation
+   */
+  performOperation(id: any, operation: any) {
+      return this.http.post<OperationMessage>('/api_users/perform_operation', {
+        id,
+        operation,
+      })
+    }
 }

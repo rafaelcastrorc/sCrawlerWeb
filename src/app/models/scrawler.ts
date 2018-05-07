@@ -7,5 +7,6 @@ export interface Scrawler {
   download_rate: any;
   last_updated: any;
   started: any;
+  is_downloading: boolean;
 }
 

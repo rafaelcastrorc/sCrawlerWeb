@@ -1,4 +1,79 @@
 <body>
+
+<div *ngIf="thereWasAnError" class="alert alert-danger alert-dismissible fade show">
+  {{error}}
+  <button (click)="thereWasAnError = false" type="button" class="close" data-dismiss="alert" aria-label="Close"
+          style="outline: none !important; box-shadow: none !important">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div *ngIf="thereWasNotAnError" class="alert alert-success alert-dismissible fade show">
+  {{message}}
+  <button (click)="thereWasNotAnError = false" type="button" class="close" data-dismiss="alert" aria-label="Close"
+          style="outline: none !important; box-shadow: none !important">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+
+<div class="card mb-3">
+  <div class="card-header">
+    <i-monitor class="icons"></i-monitor>
+    Manage your sCrawlers
+  </div>
+  <div class="container-fluid mt-3">
+    <div class="row">
+      <div class="col-xl-3 col-sm-6 mb-3" *ngFor="let sCrawler of scrawlersData">
+        <div class="card text-white o-hidden h-100 d-flex"
+             [ngStyle]="{backgroundColor: sCrawler.download_rate > 85 && sCrawler.is_downloading ? '#30a64a' :
+              sCrawler.download_rate && sCrawler.is_downloading > 60 ? '#fdc02f' : sCrawler.is_downloading ? '#da3849':
+               '#157efb'}">
+          <h5 class="card-header" style="font-size: 1rem">ID: {{sCrawler.id}}</h5>
+          <div class="card-body">
+            <div *ngIf="sCrawler.is_downloading">Download Rate: {{sCrawler.download_rate}}%</div>
+            <div *ngIf="sCrawler.is_downloading">Effectiveness Rate: {{sCrawler.effectiveness_rate}}%</div>
+            <div>Last Update: {{sCrawler.last_updated}}</div>
+            <div *ngIf="sCrawler.is_downloading">Papers Downloaded: {{sCrawler.missing_papers}}</div>
+            <div class="dropdown" style="text-align: center">
+              <button class="btn btn-outline-light dropdown-toggle btn-sm text-center mt-3" type="button"
+                      id="dropdownMenu2"
+                      data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+                Perform Operation
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <button class="dropdown-item" type="button" (click)="onSelect(sCrawler.id, 'restart')"
+                        *ngIf="sCrawler.is_downloading" >Restart </button>
+                <button class="dropdown-item" type="button" (click)="onSelect(sCrawler.id, 'close')">Close
+                </button>
+                <button class="dropdown-item" type="button" (click)="onSelect(sCrawler.id, 'update')">Update</button>
+              </div>
+            </div>
+            <div *ngIf="getMessage(sCrawler.id) != 'none'"> {{ getMessage(sCrawler.id)}} </div>
+          </div>
+
+          <a class="card-footer text-white clearfix small z-1" routerLink="../proxies">
+            View Details
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row text-center ml-3 mr-3">
+      <div class="expl mb-3" style="float: none; margin: 0 auto;">
+        <span class="text-primary"> Idle</span>
+        <span class="text-success"> Downloading at a high rate</span>
+        <span class="text-warning"> Downloading at a medium rate</span>
+        <span class="text-danger"> Downloading at a low rate</span>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer small text-muted">Updated {{date}}</div>
+</div>
+
+
 <div class="card mb-3">
   <div class="card-header">
     <i-clipboard class="icons"></i-clipboard>
@@ -49,7 +124,13 @@
     </mat-paginator>
 
   </div>
+  <div class="card-footer small text-muted">Updated {{date}}</div>
 </div>
-<div class="card-footer small text-muted">Updated {{date}}</div>
 </body>
 <script src="../../../../node_modules/focus-visible/dist/focus-visible.min.js"></script>
+
+<!--Changes the dropdown to the selected option-->
+<script>$(".dropdown-menu li a").click(function () {
+  $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+  $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+});</script>

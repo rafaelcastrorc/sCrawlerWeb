@@ -2,6 +2,7 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {DashboardService} from "../../services/dashboard.service";
 import {Proxy} from "../../models/proxy";
 import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -11,10 +12,11 @@ import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
 })
 
 export class ProxiesComponent implements OnInit, AfterViewInit {
+
   proxiesData = Array<Proxy>();
   displayedColumns = ['ip', 'port', 'updated'];
   dataSource = new MatTableDataSource<Proxy>(this.proxiesData);
-  date: Date;
+  date: string;
 
   // We use this trigger because fetching the list of persons can be quite long,
   // thus we ensure the data is fetched before rendering
@@ -23,14 +25,18 @@ export class ProxiesComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
 
-  constructor(private dashboard: DashboardService) {
+  constructor(private router: Router, private dashboard: DashboardService) {
     dashboard.proxies$.subscribe(proxies => {
       this.proxiesData = proxies;
       //Update the data
       this.dataSource.data = this.proxiesData;
     }
-
   );
+    //Get the date info was updated
+    dashboard.date$.subscribe(date => {
+      this.date = date;
+    });
+
 
   }
 
@@ -45,9 +51,6 @@ export class ProxiesComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
-    //Get current time
-    this.date = new Date();
-
 
   }
 

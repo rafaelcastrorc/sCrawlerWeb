@@ -19,9 +19,10 @@ export class AppComponent implements OnInit {
 
 
   constructor(private auth: AuthService, private router: Router) {
-    this.router.routeReuseStrategy.shouldReuseRoute = function() {
-      return false;
-    };
+    // //Force to reload when changing to children components
+    // this.router.routeReuseStrategy.shouldReuseRoute = function() {
+    //   return false;
+    // };
   }
 
   ngOnInit() {
