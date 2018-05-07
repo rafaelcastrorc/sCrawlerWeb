@@ -30,7 +30,12 @@ var port = process.env.PORT || 3000;
 //For Server to communicate between instances
 var app = express();
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var io = require('socket.io')(http, {'pingInterval': 3000});
+
+//To let routers use io
+app.io = io;
+global.app = app;
+
 
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -65,8 +70,6 @@ app.use('/api_maintenance', apiMaintenance);
  */
 passport.use(new LocalStrategy(
   function (username, password, done) {
-    console.log(username);
-    console.log(password);
     //We find the associated username in our db. Note that we are using the email as the username
     connection.query('SELECT id, password, first_name, last_name FROM users WHERE email = ?', [username], function (err, results, fields) {
       if (err) {
@@ -78,10 +81,8 @@ passport.use(new LocalStrategy(
       } else {
         //Get the hashed password in the db
         const hash = results[0].password.toString();
-        console.log(hash);
         //Verify if password matches
         bcrypt.compare(password, hash, function (err, response) {
-          console.log(results[0].id);
 
           //If they match, return the user id
           if (response === true) {
@@ -93,7 +94,6 @@ passport.use(new LocalStrategy(
             });
 
           } else {
-            console.log('Passwords do not match');
             return done(null, false);
           }
         });
@@ -109,17 +109,36 @@ app.get('*', function (req, res) {
 });
 
 
+
 /**
- * For connections between java and server
+ * For connections between java instance and server using sockets.
  */
 io.on('connection', function(socket) {
 
   console.log('Client connected.');
+  console.log(socket.id);
 
   // Disconnect listener
   socket.on('disconnect', function() {
     console.log('Client disconnected.');
   });
+
+  //Receive message from an sCrawler instance
+  socket.on('message', function(instance){
+    console.log('Instance ID: ' + instance);
+    //Add to db the socket id
+    connection.query('UPDATE user_to_instance SET socket_id = ? WHERE instance = ?',
+      [socket.id, instance], function (err, rows) {
+      if (err) {
+        console.log('There was an error ' + err);
+      }
+      else {
+        console.log('Added socket id');
+      }
+    });
+
+  });
+
 });
 
 http.listen(port, function () {
