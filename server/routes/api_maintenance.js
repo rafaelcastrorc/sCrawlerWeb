@@ -234,18 +234,18 @@ let cleanScrawlers = function (callback) {
 };
 
 
-/**
- * Reset any instance that is not working every hour
- */
-setInterval(function () {
-  console.log('Cleaning sCrawler');
-  // Clean proxies table
-  cleanScrawlers(function (cleaned) {
-    if (cleaned) {
-      console.log('All current sCrawlers are working');
-    }
-  });
-}, 1000 * 60 * 1);
+// /**
+//  * Reset any instance that is not working every hour
+//  */
+// setInterval(function () {
+//   console.log('Cleaning sCrawler');
+//   // Clean proxies table
+//   cleanScrawlers(function (cleaned) {
+//     if (cleaned) {
+//       console.log('All current sCrawlers are working');
+//     }
+//   });
+// }, 1000 * 60 * 1);
 
 
 /**
